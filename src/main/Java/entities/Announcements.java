@@ -1,4 +1,4 @@
-package main.Java.Entities;
+package entities;
 
 public class Announcements {
     private Integer announcement_id;
