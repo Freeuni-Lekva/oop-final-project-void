@@ -1,4 +1,4 @@
-package main.Java.Entities;
+package entities;
 
 public class Friendships {
     private Integer request_id;

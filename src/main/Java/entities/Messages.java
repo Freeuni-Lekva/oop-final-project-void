@@ -1,4 +1,4 @@
-package main.Java.Entities;
+package entities;
 
 public class Messages {
     private Integer message_id;

@@ -1,4 +1,4 @@
-package main.Java.Entities;
+package entities;
 
 public class Quizzes {
     private Integer quiz_id;
