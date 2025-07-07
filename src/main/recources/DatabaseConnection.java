@@ -23,3 +23,4 @@ public class DatabaseConnection {
         return dataSource;
     }
 }
+docker run --name university_task -e MYSQL_ROOT_PASSWORD=1234567890 -e MYSQL_DATABASE=mydb -e MYSQL_USER=myuser -e MYSQL_PASSWORD=mypassword -p 3306:3306 -d mysql
