@@ -2,6 +2,9 @@ package friends;
 
 import com.google.gson.Gson;
 import entities.Users;
+import friends.exceptions.AlreadyFriendsException;
+import friends.exceptions.FriendNotFoundException;
+import friends.exceptions.FriendRequestNotFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +18,7 @@ import java.util.List;
 @WebServlet("/users/friends/*")
 public class FriendsConroller extends HttpServlet {
     private final FriendsService friendsService = new FriendsService();
+    private final UsersService usersService = new UsersService();
     private final Gson gson = new Gson();
 
     @Override
@@ -22,45 +26,108 @@ public class FriendsConroller extends HttpServlet {
         if (!checkIfSessionExists(req, resp)) return;
 
         String pathInfo = req.getPathInfo();
-        if("/lookup".equals(pathInfo)) {
-           String search = req.getParameter("search");
-           List<UserDto> userDto = friendsService.lookUpPeople(search);
+        if ("/lookup".equals(pathInfo)) {
+            String search = req.getParameter("search");
+            List<UserDto> userDto = usersService.lookUpPeople(search);
 
-           returnListAsJson(userDto, resp);
-       }
+            returnListAsJson(userDto, resp);
+        } else if (pathInfo == null || req.getPathInfo().equals("/")) {
+            Integer user_id = Integer.valueOf(req.getParameter("user_id"));
+            List<FriendsDto> friendsDto = friendsService.getAllFriends(user_id);
 
-       else if(pathInfo==null || req.getPathInfo().equals("/")) {
-           Integer user_id = Integer.valueOf(req.getParameter("user_id"));
-           List<FriendsDto> friendsDto = friendsService.getAllFriends(user_id);
+            returnListAsJson(friendsDto, resp);
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown route");
+        }
+    }
 
-           returnListAsJson(friendsDto, resp);
-       }
 
-       else {
-           resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown route");
-       }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!checkIfSessionExists(req, resp)) return;
+        Integer currentUserId = Integer.valueOf(req.getParameter("user_id"));
+
+        String pathInfo = req.getPathInfo();
+        if (pathInfo == null || req.getPathInfo().equals("/")) {
+            String friend_name = req.getParameter("friend_name");
+            Users friend = usersService.findByName(friend_name);
+            Users currentUser = usersService.findById(currentUserId);
+
+            try {
+                friendsService.sendFriendRequest(currentUser, friend);
+            } catch (AlreadyFriendsException e) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            }
+
+            resp.getWriter().write("Sending Friend Request To " + friend_name + " Was Successful");
+            return;
+        }
+
+        resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown route");
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!checkIfSessionExists(req, resp)) return;
+        Integer currentUserId = Integer.valueOf(req.getParameter("user_id"));
 
-        super.doPut(req, resp);
-    }
+        String pathInfo = req.getPathInfo();
+        if (pathInfo == null || req.getPathInfo().equals("/")) {
+            String friend_name = req.getParameter("friend_name");
+            Users friend = usersService.findByName(friend_name);
+            Users currentUser = usersService.findById(currentUserId);
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!checkIfSessionExists(req, resp)) return;
+            try{
+            friendsService.acceptFriendRequest(currentUser, friend);
+            }catch (FriendRequestNotFoundException e){
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            }
 
+            resp.getWriter().write("Accepting Friend Request from " + friend_name + " Was Successful");
+            return;
+        }
 
-        super.doPost(req, resp);
+        resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown route");
+
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!checkIfSessionExists(req, resp)) return;
+        Integer currentUserId = Integer.valueOf(req.getParameter("user_id"));
 
-        super.doDelete(req, resp);
+        String pathInfo = req.getPathInfo();
+        if (pathInfo == null || req.getPathInfo().equals("/")) {
+            String friend_name = req.getParameter("friend_name");
+            Users friend = usersService.findByName(friend_name);
+            Users currentUser = usersService.findById(currentUserId);
+
+            try{
+                friendsService.rejectFriendRequest(currentUser, friend);
+            }catch (FriendRequestNotFoundException e){
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            }
+
+            resp.getWriter().write("Friend Request Reject To " + friend_name + " Was Successful");
+            return;
+        }
+
+        else if("/unfriend".equals(pathInfo)) {
+            String friend_name = req.getParameter("friend_name");
+            Users friend = usersService.findByName(friend_name);
+            Users currentUser = usersService.findById(currentUserId);
+
+            try{
+                friendsService.unfriendUser(currentUser, friend);
+            }catch (FriendNotFoundException e){
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            }
+
+            resp.getWriter().write("Unfriend Request To " + friend_name + " Was Successful");
+            return;
+        }
+        resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown route");
+
     }
 
     private boolean checkIfSessionExists(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -73,7 +140,7 @@ public class FriendsConroller extends HttpServlet {
     }
 
 
-    private <T> void returnListAsJson(List<T> data,HttpServletResponse resp) throws IOException {
+    private <T> void returnListAsJson(List<T> data, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
         String json = gson.toJson(data);
         resp.getWriter().write(json);
