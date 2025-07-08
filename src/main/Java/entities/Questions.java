@@ -1,6 +1,6 @@
 package entities;
 
-public class Questions {
+public class Question {
     private Integer question_id;
     private Integer quiz_id;
     private String question_text;

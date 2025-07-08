@@ -1,6 +1,3 @@
-package main.recources;
-
-
 import org.apache.commons.dbcp2.BasicDataSource;
 
 
