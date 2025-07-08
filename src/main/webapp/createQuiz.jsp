@@ -4,18 +4,20 @@
     <title>Create New Quiz</title>
     <style>
         body {
-            background: #f4f6f8;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f3e8ff 100%);
+            min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
         }
         .container {
-            max-width: 420px;
+            max-width: 440px;
             margin: 50px auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 32px 28px 24px 28px;
+            border-radius: 16px;
+            border: 1.5px solid #e3e8ee;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+            padding: 40px 32px 28px 32px;
         }
         h2 {
             text-align: center;
@@ -49,19 +51,31 @@
             outline: none;
         }
         input[type="submit"] {
-            background: #1976d2;
+            background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            padding: 10px 0;
+            border-radius: 8px;
+            padding: 12px 0;
             width: 100%;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
         }
         input[type="submit"]:hover {
+            background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+        input[type="submit"]:active {
             background: #125ea2;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+            transform: scale(0.98);
+        }
+        input[type="submit"]:focus {
+            outline: 2px solid #42a5f5;
+            outline-offset: 2px;
         }
     </style>
 </head>

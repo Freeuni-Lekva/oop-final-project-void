@@ -6,8 +6,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import dao.QuizDAO;
-import java.sql.SQLException;
+import dtos.quiz.QuizCreateDto;
+import org.apache.commons.dbcp2.BasicDataSource;
+import repository.QuizRepository;
+import service.QuizService;
+import resources.DatabaseConnection;
 
 @WebServlet("/createQuiz")
 public class CreateQuizServlet extends HttpServlet {
@@ -22,16 +25,21 @@ public class CreateQuizServlet extends HttpServlet {
         }
         long creatorId = Long.parseLong(creatorIdStr);
 
-        try {
-            int quizId = QuizDAO.insertQuiz(title, description, creatorId);
-            if (quizId > 0) {
-                response.sendRedirect("addQuestion.jsp?quizId=" + quizId);
-            } else {
-                response.getWriter().write("Error: Quiz could not be created.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.getWriter().write("Database error: " + e.getMessage());
+        // For now, use default values for quiz settings (can be extended to read from form)
+        Boolean randomize = false;
+        Boolean isOnePage = true;
+        Boolean immediateCorrection = false;
+        Boolean practiceMode = false;
+
+        QuizCreateDto dto = new QuizCreateDto(title, description, creatorId, randomize, isOnePage, immediateCorrection, practiceMode);
+        BasicDataSource dataSource = DatabaseConnection.getDataSource();
+        QuizRepository quizRepository = new QuizRepository(dataSource);
+        QuizService quizService = new QuizService(quizRepository);
+        int quizId = quizService.createQuiz(dto);
+        if (quizId > 0) {
+            response.sendRedirect("addQuestion.jsp?quizId=" + quizId);
+        } else {
+            response.getWriter().write("Error: Quiz could not be created.");
         }
     }
 

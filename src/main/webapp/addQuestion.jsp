@@ -4,18 +4,20 @@
     <title>Add Question</title>
     <style>
         body {
-            background: #f4f6f8;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f3e8ff 100%);
+            min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
         }
         .container {
-            max-width: 480px;
+            max-width: 500px;
             margin: 50px auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 32px 28px 24px 28px;
+            border-radius: 16px;
+            border: 1.5px solid #e3e8ee;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+            padding: 44px 36px 32px 36px;
         }
         h2 {
             text-align: center;
@@ -28,39 +30,107 @@
         }
         input[type="text"], textarea, select {
             width: 100%;
-            padding: 8px 10px;
+            padding: 12px 14px;
             margin-top: 4px;
             margin-bottom: 18px;
-            border: 1px solid #cfd8dc;
-            border-radius: 6px;
-            font-size: 15px;
+            border: 1.5px solid #cfd8dc;
+            border-radius: 8px;
+            font-size: 16px;
             background: #f9fafb;
-            transition: border 0.2s;
+            transition: border 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(60, 80, 180, 0.06);
         }
         input[type="text"]:focus, textarea:focus, select:focus {
             border: 1.5px solid #1976d2;
             outline: none;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
         }
-        input[type="submit"] {
-            background: #1976d2;
+        input[type="submit"], .finish-btn {
+            background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            padding: 10px 0;
+            border-radius: 8px;
+            padding: 12px 0;
             width: 100%;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            margin-top: 8px;
         }
-        input[type="submit"]:hover {
+        input[type="submit"]:hover, .finish-btn:hover {
+            background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+        input[type="submit"]:active, .finish-btn:active {
             background: #125ea2;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.10);
+            transform: scale(0.98);
+        }
+        input[type="submit"]:focus, .finish-btn:focus {
+            outline: 2px solid #42a5f5;
+            outline-offset: 2px;
         }
         .type-section {
             display: none;
         }
         .type-section label {
             margin-top: 8px;
+        }
+        /* Multiple Choice Custom Styling */
+        .mc-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .mc-choice-label {
+            display: flex;
+            align-items: center;
+            background: #f4f8ff;
+            border: 1.5px solid #cfd8dc;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(60, 80, 180, 0.06);
+            position: relative;
+        }
+        .mc-choice-label:hover {
+            border: 1.5px solid #1976d2;
+            background: #e3f0ff;
+        }
+        .mc-choice-radio {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .mc-choice-radio:checked + .mc-choice-custom {
+            border: 2.5px solid #1976d2;
+            background: #e3f0ff;
+        }
+        .mc-choice-custom {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #cfd8dc;
+            margin-right: 12px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border 0.2s, background 0.2s;
+        }
+        .mc-choice-radio:checked + .mc-choice-custom::after {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #1976d2;
         }
     </style>
     <script>
@@ -73,10 +143,22 @@
     </script>
 </head>
 <body>
+<%
+    String nextOrderParam = request.getParameter("nextOrder");
+    int questionOrder = 1;
+    if (nextOrderParam != null) {
+        try {
+            questionOrder = Integer.parseInt(nextOrderParam);
+        } catch (NumberFormatException e) {
+            questionOrder = 1;
+        }
+    }
+%>
 <div class="container">
     <h2>Add a Question</h2>
     <form action="addQuestion" method="post">
         <input type="hidden" name="quizId" value="<%= request.getParameter("quizId") %>">
+        <input type="hidden" name="question_order" value="<%= questionOrder %>">
 
         <label for="questionType">Question Type:</label>
         <select id="questionType" name="questionType" onchange="showTypeSection()">
@@ -107,14 +189,32 @@
             <label for="mc-question">Question:</label>
             <input type="text" id="mc-question" name="mc-question">
             <label>Choices (mark the correct one):</label><br>
-            <input type="text" name="mc-choice1" placeholder="Choice 1">
-            <input type="radio" name="mc-correct" value="1" checked> Correct<br>
-            <input type="text" name="mc-choice2" placeholder="Choice 2">
-            <input type="radio" name="mc-correct" value="2"> Correct<br>
-            <input type="text" name="mc-choice3" placeholder="Choice 3">
-            <input type="radio" name="mc-correct" value="3"> Correct<br>
-            <input type="text" name="mc-choice4" placeholder="Choice 4">
-            <input type="radio" name="mc-correct" value="4"> Correct<br>
+            <div class="mc-choices">
+                <label class="mc-choice-label">
+                    <input type="radio" class="mc-choice-radio" name="mc-correct" value="1" checked>
+                    <span class="mc-choice-custom"></span>
+                    <input type="text" name="mc-choice1" placeholder="Choice 1" style="margin-bottom:0; margin-right:10px; flex:1;">
+                    <span style="margin-left:8px; color:#1976d2; font-weight:600;">Correct</span>
+                </label>
+                <label class="mc-choice-label">
+                    <input type="radio" class="mc-choice-radio" name="mc-correct" value="2">
+                    <span class="mc-choice-custom"></span>
+                    <input type="text" name="mc-choice2" placeholder="Choice 2" style="margin-bottom:0; margin-right:10px; flex:1;">
+                    <span style="margin-left:8px; color:#1976d2; font-weight:600;">Correct</span>
+                </label>
+                <label class="mc-choice-label">
+                    <input type="radio" class="mc-choice-radio" name="mc-correct" value="3">
+                    <span class="mc-choice-custom"></span>
+                    <input type="text" name="mc-choice3" placeholder="Choice 3" style="margin-bottom:0; margin-right:10px; flex:1;">
+                    <span style="margin-left:8px; color:#1976d2; font-weight:600;">Correct</span>
+                </label>
+                <label class="mc-choice-label">
+                    <input type="radio" class="mc-choice-radio" name="mc-correct" value="4">
+                    <span class="mc-choice-custom"></span>
+                    <input type="text" name="mc-choice4" placeholder="Choice 4" style="margin-bottom:0; margin-right:10px; flex:1;">
+                    <span style="margin-left:8px; color:#1976d2; font-weight:600;">Correct</span>
+                </label>
+            </div>
         </div>
 
 
@@ -131,7 +231,7 @@
     </form>
     <form action="quizSuccess.jsp" method="get" style="margin-top: 10px;">
         <input type="hidden" name="quizId" value="<%= request.getParameter("quizId") %>">
-        <input type="submit" value="Finish Quiz" style="background: #43a047; color: #fff; font-weight: 600; border: none; border-radius: 6px; padding: 10px 0; width: 100%; font-size: 16px; margin-top: 8px; cursor: pointer; transition: background 0.2s;">
+        <input type="submit" value="Finish Quiz" class="finish-btn">
     </form>
 </div>
 <script>

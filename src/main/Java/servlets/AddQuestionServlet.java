@@ -6,8 +6,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import dao.QuestionDAO;
-import java.sql.SQLException;
+import dtos.question.QuestionCreateDto;
+import org.apache.commons.dbcp2.BasicDataSource;
+import repository.QuestionRepository;
+import service.QuestionService;
+import resources.DatabaseConnection;
 
 @WebServlet("/addQuestion")
 public class AddQuestionServlet extends HttpServlet {
@@ -21,6 +24,16 @@ public class AddQuestionServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             response.getWriter().write("Invalid quiz ID.");
             return;
+        }
+
+        String questionOrderStr = request.getParameter("question_order");
+        int questionOrder = 1;
+        if (questionOrderStr != null) {
+            try {
+                questionOrder = Integer.parseInt(questionOrderStr);
+            } catch (NumberFormatException e) {
+                questionOrder = 1;
+            }
         }
 
         // all the possible question choices
@@ -38,41 +51,49 @@ public class AddQuestionServlet extends HttpServlet {
         String prImageUrl = request.getParameter("pr-imageUrl");
         String prAnswer = request.getParameter("pr-answer");
 
-        try {
-            int questionId = -1;
-            switch (questionType) {
-                case "questionResponse":
-                    if (qrQuestion != null && qrAnswer != null && !qrQuestion.isEmpty() && !qrAnswer.isEmpty()) {
-                        questionId = QuestionDAO.insertQuestionResponse(quizId, qrQuestion, qrAnswer);
-                    }
-                    break;
-                case "fillBlank":
-                    if (fbQuestion != null && fbAnswer != null && !fbQuestion.isEmpty() && !fbAnswer.isEmpty()) {
-                        questionId = QuestionDAO.insertFillBlank(quizId, fbQuestion, fbAnswer);
-                    }
-                    break;
-                case "multipleChoice":
-                    if (mcQuestion != null && mcChoice1 != null && mcChoice2 != null && mcChoice3 != null && mcChoice4 != null && mcCorrect != null
-                        && !mcQuestion.isEmpty() && !mcChoice1.isEmpty() && !mcChoice2.isEmpty() && !mcChoice3.isEmpty() && !mcChoice4.isEmpty()) {
-                        String[] choices = {mcChoice1, mcChoice2, mcChoice3, mcChoice4};
-                        int correctIndex = Integer.parseInt(mcCorrect);
-                        questionId = QuestionDAO.insertMultipleChoice(quizId, mcQuestion, choices, correctIndex);
-                    }
-                    break;
-                case "pictureResponse":
-                    if (prQuestion != null && prImageUrl != null && prAnswer != null && !prQuestion.isEmpty() && !prImageUrl.isEmpty() && !prAnswer.isEmpty()) {
-                        questionId = QuestionDAO.insertPictureResponse(quizId, prQuestion, prImageUrl, prAnswer);
-                    }
-                    break;
-            }
-            if (questionId > 0) {
-                response.sendRedirect("addQuestion.jsp?quizId=" + quizId);
-            } else {
-                response.getWriter().write("Error: Question could not be added. Please check your input.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.getWriter().write("Database error: " + e.getMessage());
+
+        BasicDataSource dataSource = DatabaseConnection.getDataSource();
+        QuestionRepository questionRepository = new QuestionRepository(dataSource);
+        QuestionService questionService = new QuestionService(questionRepository);
+
+        boolean success = false;
+        switch (questionType) {
+            case "questionResponse":
+                if (qrQuestion != null && qrAnswer != null && !qrQuestion.isEmpty() && !qrAnswer.isEmpty()) {
+                    QuestionCreateDto dto = new QuestionCreateDto(quizId, qrQuestion, "question_response", null, questionOrder, qrAnswer, null, -1);
+                    questionService.createQuestion(dto);
+                    success = true;
+                }
+                break;
+            case "fillBlank":
+                if (fbQuestion != null && fbAnswer != null && !fbQuestion.isEmpty() && !fbAnswer.isEmpty()) {
+                    QuestionCreateDto dto = new QuestionCreateDto(quizId, fbQuestion, "fill_blank", null, questionOrder, fbAnswer, null, -1);
+                    questionService.createQuestion(dto);
+                    success = true;
+                }
+                break;
+            case "multipleChoice":
+                if (mcQuestion != null && mcChoice1 != null && mcChoice2 != null && mcChoice3 != null && mcChoice4 != null && mcCorrect != null
+                    && !mcQuestion.isEmpty() && !mcChoice1.isEmpty() && !mcChoice2.isEmpty() && !mcChoice3.isEmpty() && !mcChoice4.isEmpty()) {
+                    int correctIndex = Integer.parseInt(mcCorrect);
+                    String[] choices = {mcChoice1, mcChoice2, mcChoice3, mcChoice4};
+                    QuestionCreateDto dto = new QuestionCreateDto(quizId, mcQuestion, "multiple_choice", null, questionOrder, null, choices, correctIndex);
+                    questionService.createQuestion(dto);
+                    success = true;
+                }
+                break;
+            case "pictureResponse":
+                if (prQuestion != null && prImageUrl != null && prAnswer != null && !prQuestion.isEmpty() && !prImageUrl.isEmpty() && !prAnswer.isEmpty()) {
+                    QuestionCreateDto dto = new QuestionCreateDto(quizId, prQuestion, "picture_response", prImageUrl, questionOrder, prAnswer, null, -1);
+                    questionService.createQuestion(dto);
+                    success = true;
+                }
+                break;
+        }
+        if (success) {
+            response.sendRedirect("addQuestion.jsp?quizId=" + quizId + "&nextOrder=" + (questionOrder + 1));
+        } else {
+            response.getWriter().write("Error: Question could not be added. Please check your input.");
         }
     }
 
