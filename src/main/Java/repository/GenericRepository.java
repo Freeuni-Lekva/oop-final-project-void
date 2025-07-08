@@ -2,10 +2,10 @@ package repository;
 
 import java.util.List;
 
-public interface GenericRepository<GetDto, CreateDto, UpdateDto> {
-    GetDto getById(int id);
-    List<GetDto> getAll();
-    void create(CreateDto entity);
-    void update(UpdateDto entity);
-    void deleteById(int id);
+public interface GenericRepository<Entity> {
+    Entity getById(long id);
+    List<Entity> getAll();
+    void create(Entity entity);
+    void update(Entity entity);
+    void deleteById(long id);
 }
