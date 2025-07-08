@@ -41,7 +41,28 @@ public class QuizRepository extends AbstractRepository<QuizGetDto, QuizCreateDto
 
     @Override
     public QuizGetDto getById(int id) {
-        throw new UnsupportedOperationException();
+        String sql = "SELECT * FROM quizzes WHERE quiz_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new QuizGetDto(
+                        rs.getInt("quiz_id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getLong("creator_id"),
+                        rs.getBoolean("randomize"),
+                        rs.getBoolean("is_one_page"),
+                        rs.getBoolean("immediate_correction"),
+                        rs.getBoolean("practice_mode")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

@@ -90,4 +90,20 @@ public class QuestionRepository extends AbstractRepository<QuestionGetDto, Quest
     public void deleteById(int id) {
         throw new UnsupportedOperationException();
     }
+
+    public int countQuestionsForQuiz(int quizId) {
+        String sql = "SELECT COUNT(*) FROM questions WHERE quiz_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, quizId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 } 

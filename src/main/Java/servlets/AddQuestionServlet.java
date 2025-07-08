@@ -57,6 +57,7 @@ public class AddQuestionServlet extends HttpServlet {
         QuestionService questionService = new QuestionService(questionRepository);
 
         boolean success = false;
+        // Build the appropriate DTO and call the service
         switch (questionType) {
             case "questionResponse":
                 if (qrQuestion != null && qrAnswer != null && !qrQuestion.isEmpty() && !qrAnswer.isEmpty()) {
@@ -75,7 +76,7 @@ public class AddQuestionServlet extends HttpServlet {
             case "multipleChoice":
                 if (mcQuestion != null && mcChoice1 != null && mcChoice2 != null && mcChoice3 != null && mcChoice4 != null && mcCorrect != null
                     && !mcQuestion.isEmpty() && !mcChoice1.isEmpty() && !mcChoice2.isEmpty() && !mcChoice3.isEmpty() && !mcChoice4.isEmpty()) {
-                    int correctIndex = Integer.parseInt(mcCorrect);
+                    int correctIndex = Integer.parseInt(mcCorrect); // 1-based
                     String[] choices = {mcChoice1, mcChoice2, mcChoice3, mcChoice4};
                     QuestionCreateDto dto = new QuestionCreateDto(quizId, mcQuestion, "multiple_choice", null, questionOrder, null, choices, correctIndex);
                     questionService.createQuestion(dto);
@@ -93,7 +94,8 @@ public class AddQuestionServlet extends HttpServlet {
         if (success) {
             response.sendRedirect("addQuestion.jsp?quizId=" + quizId + "&nextOrder=" + (questionOrder + 1));
         } else {
-            response.getWriter().write("Error: Question could not be added. Please check your input.");
+            request.setAttribute("errorMessage", "Please fill in all required fields before submitting the form.");
+            request.getRequestDispatcher("/addQuestion.jsp?quizId=" + quizId + "&nextOrder=" + questionOrder).forward(request, response);
         }
     }
 

@@ -156,6 +156,12 @@
 %>
 <div class="container">
     <h2>Add a Question</h2>
+    <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
+    <% if (errorMessage != null) { %>
+        <div style="color: #b71c1c; background: #ffebee; border: 1px solid #ef9a9a; padding: 10px; border-radius: 6px; margin-bottom: 16px;">
+            <%= errorMessage %>
+        </div>
+    <% } %>
     <form action="addQuestion" method="post">
         <input type="hidden" name="quizId" value="<%= request.getParameter("quizId") %>">
         <input type="hidden" name="question_order" value="<%= questionOrder %>">
@@ -229,7 +235,7 @@
 
         <input type="submit" value="Add Question">
     </form>
-    <form action="quizSuccess.jsp" method="get" style="margin-top: 10px;">
+    <form action="finishQuiz" method="get" style="margin-top: 10px;">
         <input type="hidden" name="quizId" value="<%= request.getParameter("quizId") %>">
         <input type="submit" value="Finish Quiz" class="finish-btn">
     </form>
