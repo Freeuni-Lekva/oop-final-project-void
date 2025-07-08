@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Take Quiz</title>
+    <link rel="stylesheet" href="takeQuiz/takeQuiz.css">
+</head>
+<body>
+<div class="container">
+    <h1 id="quiz-title">Quiz Title Goes Here</h1>
+    <p id="quiz-description">Quiz description or instructions...</p>
+
+    <form action="/submit-quiz" method="post" id="quiz-form">
+        <!-- Question-Response -->
+        <div class="question">
+            <label for="q1">1. Who was the first president of the USA?</label>
+            <input type="text" name="q1" id="q1">
+        </div>
+
+        <!-- fill-in-the-Blank -->
+        <div class="question">
+            <label for="q2">2. One of Lincoln’s most famous speeches was the <input type="text" name="q2" id="q2"> Address.</label>
+        </div>
+
+        <!-- multiple choice -->
+        <div class="question">
+            <p>3. What is the capital of France?</p>
+            <label><input type="radio" name="q3" value="a"> Berlin</label><br>
+            <label><input type="radio" name="q3" value="b"> Paris</label><br>
+            <label><input type="radio" name="q3" value="c"> Madrid</label><br>
+        </div>
+
+        <!-- picture response -->
+        <div class="question">
+            <p>4. What is the name of this landmark?</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Eiffel_Tower_Vertical.JPG" alt="Landmark" class="question-image">
+            <input type="text" name="q4">
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Quiz</button>
+    </form>
+</div>
+</body>
+</html>
