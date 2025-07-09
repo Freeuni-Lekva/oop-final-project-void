@@ -1,8 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%HttpSession ses = request.getSession(false);
+<%
+    HttpSession ses = request.getSession(false);
     if (ses != null && ses.getAttribute("username") != null) {
         response.sendRedirect("welcome.jsp");
-    }%>
+    }
+%>
 <html>
 <head>
     <title>Login</title>
@@ -20,7 +21,7 @@
             background-color: white;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             width: 350px;
         }
 
@@ -99,7 +100,8 @@
         String error = (String) request.getAttribute("error");
         if (error != null) {
     %>
-    <div class="error"><%= error %></div>
+    <div class="error"><%= error %>
+    </div>
     <%
         }
     %>

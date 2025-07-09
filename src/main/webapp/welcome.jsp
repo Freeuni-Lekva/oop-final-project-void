@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String username = (String) session.getAttribute("username");
     if (username == null) {
@@ -22,8 +21,7 @@
 <% } %>
 
 <form action="logout" method="get">
-    <input type="submit" value="Logout"
-           style="padding: 10px 20px; background-color: #cc0000; color: white; border: none; border-radius: 8px; cursor: pointer;">
+    <input type="submit" value="Logout">
 </form>
 </body>
 </html>

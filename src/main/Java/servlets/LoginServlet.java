@@ -1,17 +1,11 @@
 package servlets;
 
-import resources.DatabaseConnection;
 import utils.PasswordHash;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @WebServlet("/login")
@@ -21,24 +15,18 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String hashedPassword = PasswordHash.hashPassword(password);
-        try{
-            Connection connection = DatabaseConnection.getDataSource().getConnection();
-            String query = "SELECT * FROM users WHERE username = ? AND password_hash = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, hashedPassword);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()){
+        try {
+            LoginService loginService = new LoginService();
+            if (loginService.login(username, hashedPassword)) {
                 request.getSession().setAttribute("username", username);
-                request.getSession().setAttribute("is_admin", resultSet.getBoolean("is_admin"));
+                request.getSession().setAttribute("is_admin", loginService.isAdmin(username));
                 response.sendRedirect("welcome.jsp");
-            }else{
+            } else {
                 request.setAttribute("error", "Invalid credentials, please try again.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
-        }catch(SQLException e){
-            throw new ServletException("Unexpected error",e);
+        } catch (SQLException e) {
+            throw new ServletException("Unexpected error", e);
         }
     }
 }
