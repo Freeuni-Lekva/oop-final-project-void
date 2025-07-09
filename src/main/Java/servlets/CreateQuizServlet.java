@@ -1,16 +1,14 @@
 package servlets;
 
+import entities.Question;
+import entities.Quiz;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import dtos.quiz.QuizCreateDto;
-import org.apache.commons.dbcp2.BasicDataSource;
-import repository.QuizRepository;
-import service.QuizService;
-import resources.DatabaseConnection;
+import java.sql.Timestamp;
 
 @WebServlet("/createQuiz")
 public class CreateQuizServlet extends HttpServlet {
@@ -18,29 +16,19 @@ public class CreateQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        String creatorIdStr = request.getParameter("creator_id");
-        if (creatorIdStr == null || creatorIdStr.equals("null")) {
-            response.getWriter().write("Error: User is not logged in or userId is missing from session.");
-            return;
-        }
-        long creatorId = Long.parseLong(creatorIdStr);
+        Long userIdLong = (Long) request.getSession().getAttribute("userId");
+        int creatorId = userIdLong.intValue();
 
-        // For now, use default values for quiz settings (can be extended to read from form)
-        Boolean randomize = false;
-        Boolean isOnePage = true;
-        Boolean immediateCorrection = false;
-        Boolean practiceMode = false;
 
-        QuizCreateDto dto = new QuizCreateDto(title, description, creatorId, randomize, isOnePage, immediateCorrection, practiceMode);
-        BasicDataSource dataSource = DatabaseConnection.getDataSource();
-        QuizRepository quizRepository = new QuizRepository(dataSource);
-        QuizService quizService = new QuizService(quizRepository);
-        int quizId = quizService.createQuiz(dto);
-        if (quizId > 0) {
-            response.sendRedirect("addQuestion.jsp?quizId=" + quizId);
-        } else {
-            response.getWriter().write("Error: Quiz could not be created.");
-        }
+        Quiz quiz = new Quiz(null, title, description, creatorId, false, false, false, false, new Timestamp(System.currentTimeMillis()));
+        request.getSession().setAttribute("quizEntity", quiz);
+
+        //randomizing the quiz id for session tracking only
+        String tempQuizId = java.util.UUID.randomUUID().toString();
+        request.getSession().setAttribute("tempQuizId", tempQuizId);
+
+        request.getSession().setAttribute("questionEntities", new java.util.ArrayList<Question>());
+        response.sendRedirect("addQuestion.jsp?quizId=" + tempQuizId);
     }
 
     @Override

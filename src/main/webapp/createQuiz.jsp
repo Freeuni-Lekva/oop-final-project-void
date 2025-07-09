@@ -84,12 +84,12 @@
     <h2>Create a New Quiz</h2>
     <p>
         After creating your quiz, you will be able to add questions of various types:
-        <ul>
-            <li>Question-Response (short text answer)</li>
-            <li>Fill in the Blank</li>
-            <li>Multiple Choice</li>
-            <li>Picture Response</li>
-        </ul>
+    <ul>
+        <li>Question-Response (short text answer)</li>
+        <li>Fill in the Blank</li>
+        <li>Multiple Choice</li>
+        <li>Picture Response</li>
+    </ul>
     </p>
     <form action="createQuiz" method="post">
         <input type="hidden" name="creator_id" value="<%= session.getAttribute("userId") %>">
@@ -103,4 +103,4 @@
     </form>
 </div>
 </body>
-</html> 
+</html>

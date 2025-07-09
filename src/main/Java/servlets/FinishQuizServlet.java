@@ -1,51 +1,46 @@
 package servlets;
 
-import dtos.quiz.QuizGetDto;
-import repository.QuestionRepository;
-import repository.QuizRepository;
+import entities.*;
+import repository.*;
 import org.apache.commons.dbcp2.BasicDataSource;
-import resources.DatabaseConnection;
+import service.QuestionService;
+import service.QuizService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/finishQuiz")
 public class FinishQuizServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String quizIdStr = request.getParameter("quizId");
-        int quizId = -1;
-        try {
-            quizId = Integer.parseInt(quizIdStr);
-        } catch (NumberFormatException e) {
-            response.getWriter().write("Invalid quiz ID.");
-            return;
-        }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Quiz quiz = (Quiz) request.getSession().getAttribute("quizEntity");
+        List<QuestionBundle> questionBundles = (List<QuestionBundle>) request.getSession().getAttribute("questionBundles");
 
-        BasicDataSource dataSource = DatabaseConnection.getDataSource();
-        QuizRepository quizRepository = new QuizRepository(dataSource);
-        QuizGetDto quiz = quizRepository.getById(quizId);
-        if (quiz == null) {
-            response.getWriter().write("Quiz not found.");
-            return;
-        }
-
-        QuestionRepository questionRepository = new QuestionRepository(dataSource);
-        int questionCount = questionRepository.countQuestionsForQuiz(quizId);
-
-        if (questionCount == 0) {
+        if (quiz == null || questionBundles == null || questionBundles.isEmpty()) {
             request.setAttribute("errorMessage", "You must add at least one question before finishing your quiz.");
-            request.getRequestDispatcher("/addQuestion.jsp?quizId=" + quizId).forward(request, response);
-        } else {
+            request.getRequestDispatcher("/addQuestion.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            BasicDataSource ds = resources.DatabaseConnection.getDataSource();
+            QuizService quizService = new QuizService(
+                    new QuizRepository(ds),
+                    new QuestionService(new QuestionRepository(ds), new QuestionAnswerRepository(ds), new ChoiceRepository(ds))
+            );
+
+            quizService.createQuizWithQuestions(quiz, questionBundles);
+            request.getSession().removeAttribute("quizEntity");
+            request.getSession().removeAttribute("questionBundles");
+            request.getSession().removeAttribute("tempQuizId");
             request.getRequestDispatcher("/quizSuccess.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("Failed to finish quiz: " + e.getMessage());
         }
     }
-} 
+}

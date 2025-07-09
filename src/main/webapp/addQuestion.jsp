@@ -158,9 +158,9 @@
     <h2>Add a Question</h2>
     <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
     <% if (errorMessage != null) { %>
-        <div style="color: #b71c1c; background: #ffebee; border: 1px solid #ef9a9a; padding: 10px; border-radius: 6px; margin-bottom: 16px;">
-            <%= errorMessage %>
-        </div>
+    <div style="color: #b71c1c; background: #ffebee; border: 1px solid #ef9a9a; padding: 10px; border-radius: 6px; margin-bottom: 16px;">
+        <%= errorMessage %>
+    </div>
     <% } %>
     <form action="addQuestion" method="post">
         <input type="hidden" name="quizId" value="<%= request.getParameter("quizId") %>">
@@ -168,14 +168,14 @@
 
         <label for="questionType">Question Type:</label>
         <select id="questionType" name="questionType" onchange="showTypeSection()">
-            <option value="questionResponse">Question-Response</option>
-            <option value="fillBlank">Fill in the Blank</option>
-            <option value="multipleChoice">Multiple Choice</option>
-            <option value="pictureResponse">Picture Response</option>
+            <option value="question_response">Question-Response</option>
+            <option value="fill_blank">Fill in the Blank</option>
+            <option value="multiple_choice">Multiple Choice</option>
+            <option value="picture_response">Picture Response</option>
         </select>
 
 
-        <div class="type-section" id="questionResponse-section" style="display:block;">
+        <div class="type-section" id="question_response-section" style="display:block;">
             <label for="qr-question">Question:</label>
             <input type="text" id="qr-question" name="qr-question">
             <label for="qr-answer">Answer:</label>
@@ -183,7 +183,7 @@
         </div>
 
 
-        <div class="type-section" id="fillBlank-section">
+        <div class="type-section" id="fill_blank-section">
             <label for="fb-question">Question (use ___ for the blank):</label>
             <input type="text" id="fb-question" name="fb-question">
             <label for="fb-answer">Answer:</label>
@@ -191,7 +191,7 @@
         </div>
 
 
-        <div class="type-section" id="multipleChoice-section">
+        <div class="type-section" id="multiple_choice-section">
             <label for="mc-question">Question:</label>
             <input type="text" id="mc-question" name="mc-question">
             <label>Choices (mark the correct one):</label><br>
@@ -224,7 +224,7 @@
         </div>
 
 
-        <div class="type-section" id="pictureResponse-section">
+        <div class="type-section" id="picture_response-section">
             <label for="pr-question">Question:</label>
             <input type="text" id="pr-question" name="pr-question">
             <label for="pr-imageUrl">Image URL:</label>
@@ -235,8 +235,7 @@
 
         <input type="submit" value="Add Question">
     </form>
-    <form action="finishQuiz" method="get" style="margin-top: 10px;">
-        <input type="hidden" name="quizId" value="<%= request.getParameter("quizId") %>">
+    <form action="finishQuiz" method="post" style="margin-top: 10px;">
         <input type="submit" value="Finish Quiz" class="finish-btn">
     </form>
 </div>
@@ -244,4 +243,4 @@
     showTypeSection();
 </script>
 </body>
-</html> 
+</html>
