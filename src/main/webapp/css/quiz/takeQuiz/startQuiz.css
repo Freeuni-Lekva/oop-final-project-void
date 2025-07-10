@@ -1,0 +1,75 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background-image: url("../../images/startQuizBG.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    padding: 2rem;
+    background: rgba(0, 0, 50, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+h1 {
+    margin-bottom: 0.5rem;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+p.description {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+p.timer-info {
+    font-style: italic;
+    margin-bottom: 2rem;
+    color: #a0c1ff;
+}
+
+p.good-luck {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    font-weight: 600;
+    color: #ffd966;
+    text-shadow: 1px 1px 5px #ffa500;
+}
+
+button.start-btn {
+    background: #00aaff;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 170, 255, 0.6);
+}
+
+button.start-btn:hover {
+    background: #0088cc;
+    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.9);
+}
+
+button.start-btn:active {
+    transform: scale(0.95);
+}

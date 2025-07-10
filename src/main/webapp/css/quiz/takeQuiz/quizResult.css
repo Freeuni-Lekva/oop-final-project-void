@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(145deg, #001f3f, #003366, #004080, #0059b3, #0073e6);
+    background-size: 600% 600%;
+    animation: gradientFlow 20s ease infinite;
+    color: #e3f2fd;
+    padding: 60px 20px;
+    margin: 0;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 6px #00000050;
+}
+
+#result {
+    font-size: 1.6em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #00bfff, #1e90ff);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
+    transition: transform 0.2s;
+}
+
+#result:hover {
+    transform: scale(1.02);
+}
+
+button#home-btn {
+    background: linear-gradient(to right, #00bcd4, #2196f3);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+button#home-btn:hover {
+    background: linear-gradient(to right, #1de9b6, #1dc4e9);
+    transform: scale(1.05);
+}
