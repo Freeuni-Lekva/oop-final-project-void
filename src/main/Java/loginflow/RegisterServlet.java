@@ -16,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String hashedPassword = PasswordHash.hashPassword(password);
         try {
-            RegisterService registerService = new RegisterService();
+            UsersService registerService = new UsersService();
             boolean exists = registerService.exists(username);
             if (exists) {
                 request.setAttribute("error", "Username already exists. Please choose another.");

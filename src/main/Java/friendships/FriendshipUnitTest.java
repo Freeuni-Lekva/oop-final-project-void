@@ -1,6 +1,6 @@
 //package friendships;
 //
-//import entities.Users;
+//import loginflow.Users;
 //import friendships.exceptions.FriendRequestNotFoundException;
 //import friendships.exceptions.FriendshipRequestAlreadyExistsException;
 //import org.junit.jupiter.api.BeforeEach;

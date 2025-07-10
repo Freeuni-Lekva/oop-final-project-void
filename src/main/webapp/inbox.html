@@ -1,48 +1,80 @@
+<script>
+    fetch('/QuizWebsite_war_exploded/session-check')
+        .then(res => {
+            if (!res.ok) {
+                window.location.href = 'login.jsp';
+            }
+        })
+        .catch(() => {
+            window.location.href = 'login.jsp';
+        });
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Friend Requests Inbox</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+    <title>Friend Requests Inbox - VoidQuiz</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            background-color: #0e0b39;
+            color: #f0e6ff;
             padding: 2rem;
+            min-height: 100vh;
         }
 
         header {
-            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1d1a4d;
             padding: 1rem 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-bottom: 2rem;
         }
 
-        h2 {
-            margin-bottom: 1rem;
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #bdaaff;
+        }
+
+        .btn-back {
+            padding: 0.6rem 1.2rem;
+            background-color: #3f36c4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-back:hover {
+            background-color: #5c52f0;
         }
 
         .requests {
-            background-color: #fff;
+            background-color: #161244;
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
 
         .request {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #2e2e5e;
             padding: 1rem 0;
         }
 
@@ -77,22 +109,27 @@
         .action-btn:hover {
             opacity: 0.9;
         }
+
+        .no-requests {
+            text-align: center;
+            padding: 2rem;
+            color: #aaaaff;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h2>Friend Requests Inbox</h2>
+    <div class="title">Friend Requests Inbox</div>
+    <button class="btn-back" onclick="window.location.href='welcome.jsp'">← Back to Welcome</button>
 </header>
 
 <section class="requests" id="requestsSection">
     <div id="requestList">
-        <!-- Friend requests will appear here -->
     </div>
 </section>
 
 <script>
-
     function fetchFriendRequests() {
         fetch(`/QuizWebsite_war_exploded/users/friends/requests`)
             .then(res => res.json())
@@ -101,7 +138,7 @@
                 list.innerHTML = "";
 
                 if (requests.length === 0) {
-                    list.innerHTML = "<p>No pending requests.</p>";
+                    list.innerHTML = "<div class='no-requests'>No pending friend requests.</div>";
                     return;
                 }
 
@@ -111,7 +148,7 @@
                     div.innerHTML = `
                         <div style="flex: 1;">
                             <strong>${req.friend_name}</strong>
-                            <span style="color: #3e9adb; font-size: 0.85rem; margin-left: 8px;">${"Date: "+req.friend_requested_at}</span>
+                            <span style="color: #8cb3ff; font-size: 0.85rem; margin-left: 8px;">Date: ${req.friend_requested_at}</span>
                         </div>
 
                         <div class="actions">
@@ -124,7 +161,7 @@
             })
             .catch(err => {
                 console.error("Failed to load friend requests", err);
-                document.getElementById("requestList").innerHTML = "<p>Error loading requests</p>";
+                document.getElementById("requestList").innerHTML = "<div class='no-requests'>Error loading requests</div>";
             });
     }
 

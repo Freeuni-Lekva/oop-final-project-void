@@ -1,19 +1,18 @@
 package friendships;
 
-import entities.Users;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import loginflow.Users;
+import lombok.*;
 
 import java.sql.Timestamp;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendshipDto {
     private String friend_name;
+    private String status;
     private String friend_requested_at;
 
     public static FriendshipDto fromUser(Users user, Timestamp time) {

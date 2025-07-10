@@ -1,16 +1,15 @@
 package friendships;
 
-import entities.Users;
+import loginflow.Users;
 import friendships.exceptions.FriendRequestNotAllowedException;
 import friendships.exceptions.FriendRequestNotFoundException;
 import friendships.exceptions.FriendshipRequestAlreadyExistsException;
 import friendships.exceptions.UserNotFoundException;
+import loginflow.UsersService;
 import org.apache.commons.lang3.tuple.Pair;
 import temporary.DatabaseConnection;
-import temporary.UsersService;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class FriendshipService {
     public void rejectFriendRequest(Users currentUser, Users friend) throws FriendRequestNotFoundException {
         Friendship currentFriendship = friendsRepository.findFriendshipByUsersId(currentUser.getUser_id(), friend.getUser_id());
         if (currentFriendship == null || !Objects.equals(currentFriendship.getStatus(), "pending")) {
-            throw new FriendRequestNotFoundException("No Friend Request was found");
+            throw new FriendRequestNotFoundException("No pending Friend Request was found");
         }
 
         friendsRepository.deleteFriendshipByUsersId(currentUser.getUser_id(), friend.getUser_id());
@@ -95,6 +94,18 @@ public class FriendshipService {
 
         List<FriendshipDto> friendsDto = getFriendshipDtosFromUserIds(friendsPrimaryKeyList);
         return friendsDto;
+    }
+
+    public FriendshipDto getUserFriendRequest(Integer currentUser, Integer friend) {
+        Friendship current = friendsRepository.findFriendshipByUsersId(currentUser, friend);
+
+        if(current==null) {
+            return null;
+        }
+        return FriendshipDto.builder()
+                .friend_requested_at(current.getRequested_at().toString())
+                .status(current.getStatus())
+                .build();
     }
 
 

@@ -16,7 +16,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String hashedPassword = PasswordHash.hashPassword(password);
         try {
-            LoginService loginService = new LoginService();
+            UsersService loginService = new UsersService();
             if (loginService.login(username, hashedPassword)) {
                 request.getSession().setAttribute("username", username);
                 request.getSession().setAttribute("is_admin", loginService.isAdmin(username));
