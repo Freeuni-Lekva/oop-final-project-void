@@ -1,7 +1,13 @@
-package friends;
+package friendships;
 
-public class Friends{
-    private Integer request_id;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Builder
+@Getter
+@Setter
+public class Friendship {
     private Integer requester_id;
     private Integer receiver_id;
     private String status;

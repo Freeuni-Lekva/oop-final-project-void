@@ -1,7 +1,14 @@
 package entities;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 
+@Getter
+@Builder
+@Setter
 public class Users {
     private Integer user_id;
     private String username;

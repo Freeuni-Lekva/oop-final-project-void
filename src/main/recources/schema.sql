@@ -11,13 +11,13 @@ CREATE TABLE users (
 );
 
 CREATE TABLE friendships (
-                             friendship_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                              requester_id BIGINT,
                              receiver_id BIGINT,
                              status ENUM('pending', 'accepted') DEFAULT 'pending',
                              requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                              FOREIGN KEY (requester_id) REFERENCES users(user_id) ON DELETE CASCADE,
-                             FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE
+                             FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE,
+                             PRIMARY KEY(requester_id,receiver_id)
 );
 
 CREATE TABLE quizzes (
