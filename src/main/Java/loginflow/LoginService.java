@@ -1,12 +1,12 @@
-package servlets;
+package loginflow;
 
 import java.sql.SQLException;
 
 public class LoginService {
-    private final Repository rep;
+    private final UsersRepository rep;
 
     public LoginService() {
-        rep = new Repository();
+        rep = new UsersRepository();
     }
 
     public boolean login(String username, String hashedPassword) throws SQLException {

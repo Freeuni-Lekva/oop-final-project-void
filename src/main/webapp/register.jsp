@@ -1,114 +1,117 @@
-<%
-    HttpSession ses = request.getSession(false);
-    if (ses != null && ses.getAttribute("username") != null) {
-        response.sendRedirect("welcome.jsp");
-    }
-%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <meta charset="UTF-8">
+    <title>Register - VoidQuiz</title>
     <style>
         body {
-            background-color: #e6f0ff;
+            background-color: #0e0b39;
+            color: #f0e6ff;
             font-family: 'Segoe UI', sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
+            margin: 0;
         }
 
-        .container {
-            background-color: white;
+        .brand {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #bdaaff;
+        }
+
+        .register-box {
+            background-color: #161244;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
             width: 350px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        h2 {
-            text-align: center;
-            color: #005bb5;
+        .title {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: #f0e6ff;
         }
 
-        label {
-            display: block;
-            margin-top: 20px;
-            font-weight: 600;
+        form {
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
         }
 
         input[type="text"],
         input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            background-color: #221e5e;
+            color: #fff;
         }
 
         input[type="submit"] {
-            margin-top: 30px;
-            width: 100%;
-            padding: 10px;
-            background-color: #005bb5;
+            background-color: #3f36c4;
             color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
         }
 
         input[type="submit"]:hover {
-            background-color: #005bb5;
+            background-color: #5c52f0;
+        }
+
+        .error {
+            color: #ff8080;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
         .link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .link a {
-            color: #0073e6;
-            text-decoration: none;
-        }
-
-        .link a:hover {
+            color: #bdaaff;
             text-decoration: underline;
-        }
-
-        .error {
-            color: #cc0000;
-            font-size: 0.9em;
-            text-align: center;
-            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Register</h2>
+
+<div class="brand">VoidQuiz</div>
+
+<div class="register-box">
+    <div class="title">Register</div>
+
+    <% if (request.getAttribute("error") != null) { %>
+    <div class="error"><%= request.getAttribute("error") %></div>
+    <% } %>
+
     <form action="register" method="post">
-        <label>Username:</label>
-        <input type="text" name="username" required>
-
-        <label>Password:</label>
-        <input type="password" name="password" required>
-
-        <input type="submit" value="Register">
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <input type="submit" value="Register" />
     </form>
 
-    <%
-        String error = (String) request.getAttribute("error");
-        if (error != null) {
-    %>
-    <div class="error"><%= error %>
-    </div>
-    <%
-        }
-    %>
-
     <div class="link">
-        Already have an account? <a href="login.jsp">Log in</a>
+        Already have an account? <a href="login.jsp">Login here</a>
     </div>
 </div>
+
 </body>
 </html>

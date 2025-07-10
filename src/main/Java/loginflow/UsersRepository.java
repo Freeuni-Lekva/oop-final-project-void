@@ -1,4 +1,4 @@
-package servlets;
+package loginflow;
 
 import resources.DatabaseConnection;
 
@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Repository {
+public class UsersRepository {
     private static final String login = "SELECT * FROM users WHERE username = ? AND password_hash = ?";
     private static final String userExists = "SELECT COUNT(*) FROM users WHERE username = ?";
     private static final String addUser = "INSERT INTO users (username, password_hash) VALUES (?, ?)";

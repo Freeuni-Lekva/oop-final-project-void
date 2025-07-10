@@ -1,12 +1,12 @@
-package servlets;
+package loginflow;
 
 import java.sql.SQLException;
 
 public class RegisterService {
-    private final Repository rep;
+    private final UsersRepository rep;
 
     public RegisterService() throws SQLException {
-        rep = new Repository();
+        rep = new UsersRepository();
     }
 
     public boolean exists(String username) throws SQLException {
