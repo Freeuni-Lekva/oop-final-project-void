@@ -184,18 +184,17 @@
                     const div = document.createElement("div");
                     div.className = "user";
 
-                    // Name span
                     const nameSpan = document.createElement("span");
                     nameSpan.className = "user-name";
                     nameSpan.textContent = `${index + 1}. ${user.friend_name}`;
                     nameSpan.onclick = () => showFriendDetails(user.friend_name);
 
-                    // Profile button
+
                     const profileBtn = document.createElement("button");
                     profileBtn.className = "view-profile-btn";
                     profileBtn.textContent = "View Profile";
                     profileBtn.onclick = (e) => {
-                        e.stopPropagation(); // prevent triggering showFriendDetails
+                        e.stopPropagation();
                         goToProfile(user.friend_name);
                     };
 
