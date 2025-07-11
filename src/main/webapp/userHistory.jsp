@@ -117,7 +117,7 @@
                 </tr>
                 <%
                     for (QuizAttempt attempt : userAttempts) {
-                        Long quizId = Long.valueOf(attempt.getQuiz_id());
+                        Long quizId = Long.valueOf(attempt.getQuizId());
                         Quiz quiz = quizDetails.get(quizId);
                         String quizName = (quiz != null) ? quiz.getTitle() : "Unknown Quiz";
                 %>
@@ -128,9 +128,9 @@
                         </a>
                     </td>
                     <td><%= attempt.getScore() %></td>
-                    <td><%= attempt.getTotal_questions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotal_questions()) : "-" %>%</td>
-                    <td><%= attempt.getTime_taken() %></td>
-                    <td><%= attempt.getAttempted_at() != null ? attempt.getAttempted_at().toString().substring(0, 16).replace('T', ' ') : "" %></td>
+                    <td><%= attempt.getTotalQuestions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotalQuestions()) : "-" %>%</td>
+                    <td><%= attempt.getTimeTaken() %></td>
+                    <td><%= attempt.getAttemptedAt() != null ? attempt.getAttemptedAt().toString().substring(0, 16).replace('T', ' ') : "" %></td>
                 </tr>
                 <%
                     }
