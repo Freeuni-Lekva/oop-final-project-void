@@ -46,8 +46,8 @@ public class QuestionService {
 
         int questionId = question.getQuestionId();
 
-        answerRepo.deleteById(questionId);
-        choiceRepo.deleteById(questionId);
+        answerRepo.deleteByQuestionId(questionId);
+        choiceRepo.deleteByQuestionId(questionId);
 
         QuestionAnswer answer = bundle.getAnswer();
         if (answer != null) {
