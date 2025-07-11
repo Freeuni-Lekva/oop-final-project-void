@@ -142,7 +142,7 @@
                 <a class="quiz-title" href="QuizSummaryServlet?quizId=<%= quiz.getQuizId() %>"><%= quiz.getTitle() %></a>
                 <div class="quiz-desc"><%= quiz.getDescription() %></div>
                 <div class="quiz-meta">
-                    By <a class="creator-link" href="userProfile?userId=<%= creatorId %>"><%= creatorName %></a><br>
+                    By <a class="creator-link" href="profile.jsp?user=<%= creatorId %>"><%= creatorName %></a><br>
                     Created: <%= quiz.getCreatedAt() != null ? quiz.getCreatedAt().toString().substring(0, 16).replace('T', ' ') : "Unknown" %>
                 </div>
                 <form action="quiz/start" method="get" style="margin:0;">

@@ -156,4 +156,17 @@ public class QuizRepository extends AbstractRepository<Quiz> {
                 rs.getInt("creator_id"),
                 rs.getTimestamp("created_at"));
     }
+
+    public int getTakenQuizCount(String username) throws SQLException {
+        String query = "SELECT COUNT(*) AS taken_count FROM quiz_attempts WHERE username = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("taken_count");
+            }
+        }
+        return 0;
+    }
 } 
