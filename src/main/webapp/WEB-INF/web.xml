@@ -11,6 +11,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>QuizInfoApi</servlet-name>
+    <servlet-class>quiz.TakeQuiz.servlets.QuizInfoApiServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>StartQuizServlet</servlet-name>
     <servlet-class>quiz.TakeQuiz.servlets.StartQuizServlet</servlet-class>
   </servlet>
@@ -31,6 +36,11 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>QuizInfoApi</servlet-name>
+    <url-pattern>/quiz/info</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>StartQuizServlet</servlet-name>
     <url-pattern>/quiz/start</url-pattern>
   </servlet-mapping>
@@ -45,7 +55,6 @@
     <url-pattern>/quiz/submit</url-pattern>
   </servlet-mapping>
 
-  <!-- Must come after servlet(-mapping) declarations -->
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>

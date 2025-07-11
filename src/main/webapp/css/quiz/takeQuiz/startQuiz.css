@@ -19,57 +19,59 @@ body {
     position: relative;
     z-index: 1;
     max-width: 600px;
-    padding: 2rem;
-    background: rgba(0, 0, 50, 0.9);
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    padding: 2.5rem 3rem;
+    background: rgba(0, 0, 50, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0, 0, 80, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 h1 {
-    margin-bottom: 0.5rem;
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: 2px;
+    margin-bottom: 0.7rem;
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 8px rgba(0, 170, 255, 0.7);
 }
 
 p.description {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-}
-
-p.timer-info {
-    font-style: italic;
+    font-size: 1.3rem;
     margin-bottom: 2rem;
-    color: #a0c1ff;
-}
-
-p.good-luck {
-    font-size: 1.5rem;
-    margin-bottom: 3rem;
-    font-weight: 600;
-    color: #ffd966;
-    text-shadow: 1px 1px 5px #ffa500;
+    line-height: 1.6;
+    color: #cbd5ff;
+    text-shadow: 0 1px 4px rgba(0, 0, 40, 0.7);
 }
 
 button.start-btn {
-    background: #00aaff;
+    background: linear-gradient(135deg, #00bfff 0%, #0077cc 100%);
     border: none;
-    padding: 1rem 3rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
-    border-radius: 40px;
+    padding: 1.2rem 4rem;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    border-radius: 50px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    box-shadow: 0 6px 12px rgba(0, 170, 255, 0.6);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 20px rgba(0, 127, 255, 0.6);
+    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 button.start-btn:hover {
-    background: #0088cc;
-    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.9);
+    background: linear-gradient(135deg, #0088ff 0%, #005fa3 100%);
+    box-shadow: 0 12px 30px rgba(0, 120, 255, 0.9);
+    transform: translateY(-3px);
 }
 
 button.start-btn:active {
-    transform: scale(0.95);
+    background: linear-gradient(135deg, #005fa3 0%, #003f66 100%);
+    box-shadow: 0 6px 10px rgba(0, 100, 180, 0.7);
+    transform: translateY(1px);
+}
+
+button.start-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 170, 255, 0.7);
 }
