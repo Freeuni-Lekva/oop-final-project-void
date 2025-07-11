@@ -1,9 +1,6 @@
 package questionAnswer;
 
-import choice.Choice;
-import choice.ChoiceRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
-import recources.DatabaseConnection;
 import repository.AbstractRepository;
 
 import java.sql.Connection;

@@ -3,7 +3,6 @@ package quiz.submitQuiz.servlets;
 import choice.ChoiceRepository;
 import choice.ChoiceService;
 import com.google.gson.Gson;
-import org.apache.commons.dbcp2.BasicDataSource;
 import questionAnswer.QuestionAnswerRepository;
 import questionAnswer.QuestionAnswerService;
 import quiz.submitQuiz.QuizEvaluationService;
@@ -12,14 +11,12 @@ import quiz.submitQuiz.mapper.QuizSubmissionMapper;
 import quizAttempt.QuizAttempt;
 import quizAttempt.QuizAttemptRepository;
 import quizAttempt.QuizAttemptService;
-import recources.DatabaseConnection;
+import resources.DatabaseConnection;
 import response.Response;
 import response.ResponseRepository;
 import response.ResponseService;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,9 +36,6 @@ public class SubmitQuizServlet extends HttpServlet {
         submission = new Gson().fromJson(reader, QuizSubmissionDto.class);
         int score;
         Integer userId = (Integer) req.getSession().getAttribute("userId");
-        if (userId == null) {
-            userId = 1;
-        }
 
         QuestionAnswerRepository qaRepository = new QuestionAnswerRepository(DatabaseConnection.getDataSource());
         QuizAttemptRepository attemptRepository = new QuizAttemptRepository(DatabaseConnection.getDataSource());
@@ -58,7 +52,7 @@ public class SubmitQuizServlet extends HttpServlet {
         session.setAttribute("score", score);
         session.setAttribute("totalQuestions", totalQuestions);
 
-        QuizAttempt attempt = QuizSubmissionMapper.mapToQuizAttempt(submission, userId);
+        QuizAttempt attempt = QuizSubmissionMapper.mapToQuizAttempt(submission,userId);
         attempt.setScore(score);
 
         attemptService.createQuizAttempt(attempt);
@@ -68,11 +62,6 @@ public class SubmitQuizServlet extends HttpServlet {
             responseService.createResponse(response);
         }
 
-//        resp.setStatus(HttpServletResponse.SC_CREATED);
-//        resp.setContentType("application/json");
-//        PrintWriter out = resp.getWriter();
-//        out.write("{\"score\":" + score + ", \"attemptId\":" + attempt.getAttemptId() + "}");
-//        out.flush();
     }
 
 

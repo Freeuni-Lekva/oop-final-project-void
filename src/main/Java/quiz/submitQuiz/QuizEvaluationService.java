@@ -3,7 +3,6 @@ package quiz.submitQuiz;
 import choice.Choice;
 import choice.ChoiceRepository;
 import choice.ChoiceService;
-import lombok.var;
 import questionAnswer.QuestionAnswer;
 import questionAnswer.QuestionAnswerService;
 import quiz.submitQuiz.dtos.UserAnswerDto;

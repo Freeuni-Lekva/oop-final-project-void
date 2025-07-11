@@ -1,4 +1,4 @@
-package main.Java.Entities;
+package entities;
 
 public class Achievements {
     private Integer achievement_id;

@@ -1,5 +1,4 @@
-drop database quiz_website;
-
+drop database  quiz_website;
 CREATE DATABASE IF NOT EXISTS quiz_website;
 USE quiz_website;
 
@@ -13,13 +12,13 @@ CREATE TABLE users (
 );
 
 CREATE TABLE friendships (
-                             friendship_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                              requester_id BIGINT,
                              receiver_id BIGINT,
                              status ENUM('pending', 'accepted') DEFAULT 'pending',
                              requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                              FOREIGN KEY (requester_id) REFERENCES users(user_id) ON DELETE CASCADE,
-                             FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE
+                             FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE,
+                             PRIMARY KEY(requester_id,receiver_id)
 );
 
 CREATE TABLE quizzes (
@@ -27,10 +26,6 @@ CREATE TABLE quizzes (
                          title VARCHAR(100) NOT NULL,
                          description TEXT,
                          creator_id BIGINT,
-                         randomize BOOLEAN DEFAULT FALSE,
-                         is_one_page BOOLEAN DEFAULT TRUE,
-                         immediate_correction BOOLEAN DEFAULT FALSE,
-                         practice_mode BOOLEAN DEFAULT FALSE,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          FOREIGN KEY (creator_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
@@ -133,43 +128,5 @@ CREATE TABLE quiz_categories (
 );
 
 
--- Insert test users
-INSERT INTO users (username, password_hash) VALUES
-                                                ('john_doe', 'hashed_pw_1'),
-                                                ('jane_smith', 'hashed_pw_2');
-
--- Insert a test quiz
-INSERT INTO quizzes (title, description, creator_id, randomize, is_one_page, immediate_correction, practice_mode)
-VALUES ('Java Basics', 'A quiz about Java fundamentals', 1, FALSE, TRUE, TRUE, FALSE);
-
--- Insert questions
-INSERT INTO questions (quiz_id, question_text, type, question_order)
-VALUES
-    (1, 'What is the size of int in Java?', 'multiple_choice', 1),
-    (1, 'Which keyword is used to inherit a class?', 'multiple_choice', 2),
-    (1, 'What is encapsulation in OOP?', 'question_response', 3);
-
--- Insert choices for multiple choice questions
-INSERT INTO choices (question_id, choice_text, is_correct) VALUES
-                                                               (1, '2 bytes', FALSE),
-                                                               (1, '1 bytes', FALSE),
-                                                               (1, '3 bytes', FALSE),
-                                                               (1, '4 bytes', TRUE),
-                                                               (1, '8 bytes', FALSE),
-                                                               (2, 'extends', TRUE),
-                                                               (2, 'implements', FALSE),
-                                                               (2, 'inherits', FALSE);
-
--- Insert acceptable text answers for open-ended question
-INSERT INTO question_answers (question_id, answer_text) VALUES
-                                                                          (3, 'Encapsulation');
 
 
-
-select * from quizzes join questions q on quizzes.quiz_id = q.quiz_id;
-select * from question_answers;
-
-
-
-select * from responses;
-select * from quiz_attempts;

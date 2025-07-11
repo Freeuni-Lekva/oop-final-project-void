@@ -1,7 +1,6 @@
 package choice;
 
-import questionAnswer.QuestionAnswer;
-import recources.DatabaseConnection;
+import resources.DatabaseConnection;
 
 import java.util.ArrayList;
 import java.util.List;

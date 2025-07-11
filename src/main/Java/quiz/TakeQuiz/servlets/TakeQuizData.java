@@ -1,12 +1,9 @@
 package quiz.TakeQuiz.servlets;
 
 import com.google.gson.Gson;
-import quiz.Quiz;
-import quiz.QuizRepository;
 import quiz.QuizService;
-import quiz.TakeQuiz.dtos.TakeQuizChoiceDto;
 import quiz.TakeQuiz.dtos.TakeQuizDto;
-import recources.DatabaseConnection;
+import resources.DatabaseConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +23,7 @@ public class TakeQuizData extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String idParam = req.getParameter("id");
         if (idParam == null) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Quiz ID is required.");
@@ -41,11 +39,6 @@ public class TakeQuizData extends HttpServlet {
         }
 
         TakeQuizDto quiz = quizService.getFullQuiz(quizId);
-
-        if (quiz == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Quiz not found.");
-            return;
-        }
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
