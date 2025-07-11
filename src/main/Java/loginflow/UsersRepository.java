@@ -1,8 +1,8 @@
 package loginflow;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import resources.DatabaseConnection;
 import repository.AbstractRepository;
-import temporary.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

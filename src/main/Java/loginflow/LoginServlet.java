@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
             UsersService loginService = new UsersService();
             if (loginService.login(username, hashedPassword)) {
                 request.getSession().setAttribute("username", username);
+                request.getSession().setAttribute( "userId",loginService.findByName(username).getUser_id());
                 request.getSession().setAttribute("is_admin", loginService.isAdmin(username));
                 response.sendRedirect("welcome.jsp");
             } else {

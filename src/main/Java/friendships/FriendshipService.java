@@ -7,7 +7,7 @@ import friendships.exceptions.UserNotFoundException;
 import loginflow.Users;
 import loginflow.UsersService;
 import org.apache.commons.lang3.tuple.Pair;
-import temporary.DatabaseConnection;
+import resources.DatabaseConnection;
 
 import java.sql.Timestamp;
 import java.util.List;

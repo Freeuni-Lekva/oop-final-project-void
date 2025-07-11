@@ -1,3 +1,4 @@
+drop database  quiz_website;
 CREATE DATABASE IF NOT EXISTS quiz_website;
 USE quiz_website;
 
@@ -25,10 +26,6 @@ CREATE TABLE quizzes (
                          title VARCHAR(100) NOT NULL,
                          description TEXT,
                          creator_id BIGINT,
-                         randomize BOOLEAN DEFAULT FALSE,
-                         is_one_page BOOLEAN DEFAULT TRUE,
-                         immediate_correction BOOLEAN DEFAULT FALSE,
-                         practice_mode BOOLEAN DEFAULT FALSE,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          FOREIGN KEY (creator_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
@@ -68,7 +65,6 @@ CREATE TABLE question_answers (
                                   answer_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                   question_id BIGINT,
                                   answer_text VARCHAR(255),
-                                  answer_order INT DEFAULT 1,
                                   FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
 );
 
@@ -79,7 +75,6 @@ CREATE TABLE quiz_attempts (
                                score FLOAT,
                                total_questions INT,
                                time_taken INT,
-                               is_practice BOOLEAN DEFAULT FALSE,
                                attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE,
                                FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -90,8 +85,6 @@ CREATE TABLE responses (
                            attempt_id BIGINT,
                            question_id BIGINT,
                            response_text TEXT,
-                           is_correct BOOLEAN,
-                           response_order INT DEFAULT 1,
                            FOREIGN KEY (attempt_id) REFERENCES quiz_attempts(attempt_id) ON DELETE CASCADE,
                            FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
 );
@@ -133,3 +126,7 @@ CREATE TABLE quiz_categories (
                                  FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE,
                                  FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE CASCADE
 );
+
+
+
+

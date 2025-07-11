@@ -1,6 +1,12 @@
-package entities;
+package choice;
 
-public class Choices {
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder
+@Getter
+public class Choice {
     private Integer choice_id;
     private Integer question_id;
     private String choice_text;

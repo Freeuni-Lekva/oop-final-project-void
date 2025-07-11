@@ -1,6 +1,7 @@
 package loginflow;
 
-import temporary.DatabaseConnection;
+
+import resources.DatabaseConnection;
 
 import java.sql.SQLException;
 import java.util.List;
