@@ -34,7 +34,7 @@ CREATE TABLE messages (
                           message_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           sender_id BIGINT,
                           receiver_id BIGINT,
-                          type ENUM('note', 'friend_request', 'challenge') NOT NULL,
+                          type ENUM('note', 'challenge') NOT NULL,
                           content TEXT,
                           quiz_id BIGINT,
                           sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

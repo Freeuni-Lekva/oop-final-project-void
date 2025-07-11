@@ -139,6 +139,7 @@
     <a href="<%= request.getContextPath() %>/search_bar.html">Search Users</a>
     <a href="<%= request.getContextPath() %>/inbox.html">Inbox</a>
     <a href="<%= request.getContextPath() %>/friends.html">Friends</a>
+    <a href="<%= request.getContextPath() %>/messageInbox.html">Message Inbox</a>
 </div>
 
 <div class="header">VoidQuiz</div>

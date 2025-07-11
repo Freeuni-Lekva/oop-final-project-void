@@ -102,6 +102,17 @@ public class ChoiceRepository extends AbstractRepository<Choice> {
         }
     }
 
+    public void deleteByQuestionId(int questionId) {
+        String sql = "DELETE FROM choices WHERE question_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, questionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Choice> getAllChoicesByQuestionId(int id) {
         try (Connection connection = this.dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT * from choices where question_id = ?");
