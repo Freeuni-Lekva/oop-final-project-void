@@ -17,10 +17,9 @@ public class MessageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         MessageDto messageDto = objectMapper.readValue(req.getInputStream(), MessageDto.class);
-//        String senderIdParam = req.getSession().getAttribute("userId").toString();
-//
-//        Integer senderId = Integer.valueOf(senderIdParam);
-        Integer senderId = 2;
+        String senderIdParam = req.getSession().getAttribute("userId").toString();
+
+        Integer senderId = Integer.valueOf(senderIdParam);
 
         messageService.save(messageDto, senderId);
 
@@ -30,12 +29,9 @@ public class MessageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        String userId = req.getSession().getAttribute("userId").toString();
-//
-//        int receiverId = Integer.parseInt(userId);
+        String userId = req.getSession().getAttribute("userId").toString();
 
-        int receiverId = 1;
-
+        int receiverId = Integer.parseInt(userId);
         List<MessageDto> messages = messageService.getAllByReceiverId(receiverId);
 
         resp.setContentType("application/json");
