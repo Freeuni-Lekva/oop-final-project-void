@@ -132,7 +132,6 @@
 </head>
 <body>
 
-<!-- Navigation Bar -->
 <div class="navbar">
     <a href="<%= request.getContextPath() %>/createQuiz.jsp">Create Quiz</a>
     <a href="<%= request.getContextPath() %>/myQuizzes.jsp">My Quizzes</a>
@@ -141,7 +140,6 @@
     <a href="<%= request.getContextPath() %>/friends.html">Friends</a>
 </div>
 
-<!-- Main Welcome Card -->
 <div class="header">VoidQuiz</div>
 
 <div class="card">

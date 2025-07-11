@@ -37,11 +37,12 @@ public class UsersRepository extends AbstractRepository<Users> {
     }
 
     public void add(String username, String hashedPassword) throws SQLException {
-        Connection connection = DatabaseConnection.getDataSource().getConnection();
+        try(Connection connection = DatabaseConnection.getDataSource().getConnection()){
         PreparedStatement preparedStatement = connection.prepareStatement(addUser);
         preparedStatement.setString(1, username);
         preparedStatement.setString(2, hashedPassword);
         preparedStatement.executeUpdate();
+        }
     }
 
     public boolean isAdmin(String username) throws SQLException {
