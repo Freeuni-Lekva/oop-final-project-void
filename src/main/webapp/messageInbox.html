@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Message Inbox - VoidQuiz</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #0e0b39;
+            color: #f0e6ff;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1d1a4d;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #bdaaff;
+        }
+
+        .btn-back {
+            padding: 0.6rem 1.2rem;
+            background-color: #3f36c4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-back:hover {
+            background-color: #5c52f0;
+        }
+
+        .inbox {
+            background-color: #161244;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .inbox h3 {
+            margin-bottom: 1rem;
+            color: #bdaaff;
+        }
+
+        .message {
+            border-bottom: 1px solid #2e2e5e;
+            padding: 1rem 0;
+        }
+
+        .message:last-child {
+            border-bottom: none;
+        }
+
+        .message-header {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-content {
+            margin: 0.5rem 0;
+            color: #ddd;
+        }
+
+        .message-meta {
+            font-size: 0.9rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    fetch('/session-check')
+        .then(res => {
+            if (!res.ok) {
+                window.location.href = 'login.jsp';
+            }
+        })
+        .catch(() => {
+            window.location.href = 'login.jsp';
+        });
+</script>
+
+<header>
+    <div class="title">VoidQuiz – Message Inbox</div>
+    <button class="btn-back" onclick="window.location.href='welcome.jsp'">← Back to Welcome</button>
+</header>
+
+<section class="inbox">
+    <h3>Your Messages</h3>
+    <div id="messageList">Loading messages...</div>
+</section>
+
+<script>
+    function loadMessages() {
+        fetch("/message")
+            .then(res => res.json())
+            .then(messages => {
+                const list = document.getElementById("messageList");
+                list.innerHTML = "";
+
+                if (messages.length === 0) {
+                    list.textContent = "No messages received.";
+                    return;
+                }
+
+                messages.sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at));
+
+                messages.forEach(msg => {
+                    const msgDiv = document.createElement("div");
+                    msgDiv.className = "message";
+
+                    const header = document.createElement("div");
+                    header.className = "message-header";
+                    header.textContent = `From: ${msg.senderUsername} | Type: ${msg.type}`;
+
+                    const content = document.createElement("div");
+                    content.className = "message-content";
+                    content.textContent = msg.content;
+
+                    const meta = document.createElement("div");
+                    meta.className = "message-meta";
+                    meta.textContent = `Sent at: ${new Date(msg.sent_at).toLocaleString()}`;
+
+                    msgDiv.appendChild(header);
+                    msgDiv.appendChild(content);
+                    msgDiv.appendChild(meta);
+                    list.appendChild(msgDiv);
+                });
+            })
+            .catch(err => {
+                console.error("Failed to load messages", err);
+                document.getElementById("messageList").textContent = "Failed to load messages.";
+            });
+    }
+
+    loadMessages();
+</script>
+
+</body>
+</html>

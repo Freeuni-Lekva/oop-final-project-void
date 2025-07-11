@@ -25,6 +25,10 @@ public class QuestionBundle implements Serializable {
         this.choices = choices;
     }
 
+    public QuestionBundle() {
+
+    }
+
     public void setAnswers(QuestionAnswer answer) {
         this.answer = answer;
     }

@@ -3,8 +3,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/quiz_website";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = ""; //replace with your password;
+    private static final String USERNAME = "user";
+
+    private static final String PASSWORD = "1234567890"; //replace with your password;
+
 
     private static final BasicDataSource dataSource;
 
@@ -20,4 +22,5 @@ public class DatabaseConnection {
         return dataSource;
     }
 }
+
 

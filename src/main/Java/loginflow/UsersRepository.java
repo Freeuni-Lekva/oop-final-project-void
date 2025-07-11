@@ -23,20 +23,22 @@ public class UsersRepository extends AbstractRepository<Users> {
 
 
     public boolean testLoginInfo(String username, String hashedPassword) throws SQLException {
-        Connection connection = DatabaseConnection.getDataSource().getConnection();
+        try(Connection connection = DatabaseConnection.getDataSource().getConnection()){
         PreparedStatement preparedStatement = connection.prepareStatement(login);
         preparedStatement.setString(1, username);
         preparedStatement.setString(2, hashedPassword);
         ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet.next();
+        }
     }
 
     public boolean userExists(String username) throws SQLException {
-        Connection conn = DatabaseConnection.getDataSource().getConnection();
+        try(Connection conn = DatabaseConnection.getDataSource().getConnection()){
         PreparedStatement ps = conn.prepareStatement(userExists);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();
         return rs.next() && rs.getInt(1) != 0;
+        }
     }
 
     public void add(String username, String hashedPassword) throws SQLException {
@@ -49,11 +51,12 @@ public class UsersRepository extends AbstractRepository<Users> {
     }
 
     public boolean isAdmin(String username) throws SQLException {
-        Connection conn = DatabaseConnection.getDataSource().getConnection();
+        try(Connection conn = DatabaseConnection.getDataSource().getConnection()){
         PreparedStatement ps = conn.prepareStatement(isAdmin);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();
         return rs.next() && rs.getBoolean("is_admin");
+        }
     }
 
     public Users findById(int userId) {

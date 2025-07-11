@@ -34,7 +34,7 @@ CREATE TABLE messages (
                           message_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                           sender_id BIGINT,
                           receiver_id BIGINT,
-                          type ENUM('note', 'friend_request', 'challenge') NOT NULL,
+                          type ENUM('note', 'challenge') NOT NULL,
                           content TEXT,
                           quiz_id BIGINT,
                           sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -87,44 +87,6 @@ CREATE TABLE responses (
                            response_text TEXT,
                            FOREIGN KEY (attempt_id) REFERENCES quiz_attempts(attempt_id) ON DELETE CASCADE,
                            FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
-);
-
-CREATE TABLE achievements (
-                              achievement_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                              name VARCHAR(100) NOT NULL,
-                              description TEXT,
-                              icon_url TEXT
-);
-
-CREATE TABLE user_achievements (
-                                   user_id BIGINT,
-                                   achievement_id BIGINT,
-                                   earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                   PRIMARY KEY (user_id, achievement_id),
-                                   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-                                   FOREIGN KEY (achievement_id) REFERENCES achievements(achievement_id) ON DELETE CASCADE
-);
-
-CREATE TABLE announcements (
-                               announcement_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                               admin_id BIGINT,
-                               title VARCHAR(100),
-                               content TEXT,
-                               posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                               FOREIGN KEY (admin_id) REFERENCES users(user_id) ON DELETE SET NULL
-);
-
-CREATE TABLE categories (
-                            category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                            name VARCHAR(50) UNIQUE NOT NULL
-);
-
-CREATE TABLE quiz_categories (
-                                 quiz_id BIGINT,
-                                 category_id BIGINT,
-                                 PRIMARY KEY (quiz_id, category_id),
-                                 FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE,
-                                 FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE CASCADE
 );
 
 
