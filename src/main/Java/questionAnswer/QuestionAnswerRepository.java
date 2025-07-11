@@ -98,6 +98,17 @@ public class QuestionAnswerRepository extends AbstractRepository<QuestionAnswer>
         }
     }
 
+    public void deleteByQuestionId(int questionId) {
+        String sql = "DELETE FROM question_answers WHERE question_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, questionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<QuestionAnswer> getCorrectAnswersByQuestionIds(List<Integer> questionIds) {
         if (questionIds == null || questionIds.isEmpty()) {
             return List.of();
