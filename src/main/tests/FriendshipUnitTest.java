@@ -7,7 +7,7 @@ import loginflow.Users;
 import loginflow.UsersService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import temporary.DatabaseConnection;
+import resources.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;

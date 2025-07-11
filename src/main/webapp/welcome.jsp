@@ -133,6 +133,7 @@
 <body>
 
 <div class="navbar">
+    <a href="<%= request.getContextPath() %>/allQuizzes">All Quizzes</a>
     <a href="<%= request.getContextPath() %>/createQuiz.jsp">Create Quiz</a>
     <a href="<%= request.getContextPath() %>/myQuizzes">My Quizzes</a>
     <a href="<%= request.getContextPath() %>/search_bar.html">Search Users</a>
