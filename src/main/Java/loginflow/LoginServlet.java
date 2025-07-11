@@ -4,7 +4,9 @@ import utils.PasswordHash;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -16,7 +18,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String hashedPassword = PasswordHash.hashPassword(password);
         try {
-            LoginService loginService = new LoginService();
+            UsersService loginService = new UsersService();
             if (loginService.login(username, hashedPassword)) {
                 request.getSession().setAttribute("username", username);
                 request.getSession().setAttribute("is_admin", loginService.isAdmin(username));

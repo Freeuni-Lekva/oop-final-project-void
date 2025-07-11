@@ -4,7 +4,10 @@ import utils.PasswordHash;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -16,7 +19,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String hashedPassword = PasswordHash.hashPassword(password);
         try {
-            RegisterService registerService = new RegisterService();
+            UsersService registerService = new UsersService();
             boolean exists = registerService.exists(username);
             if (exists) {
                 request.setAttribute("error", "Username already exists. Please choose another.");

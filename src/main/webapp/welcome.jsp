@@ -1,14 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="javax.servlet.http.HttpSession" %>
 <%
-    HttpSession ses = request.getSession(false);
-    String username = (ses != null) ? (String) session.getAttribute("username") : null;
-
-    if (username == null) {
+    if (session == null || session.getAttribute("username") == null) {
         response.sendRedirect("login.jsp");
         return;
     }
+
+    String username = (String) session.getAttribute("username");
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,8 +26,34 @@
             height: 100vh;
         }
 
+        .navbar {
+            background-color: #1d1a4d;
+            width: 100%;
+            padding: 12px 0;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: #f0e6ff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #302a84;
+        }
+
         .header {
-            margin-top: 40px;
+            margin-top: 100px;
             font-size: 3rem;
             font-weight: bold;
             color: #bdaaff;
@@ -106,6 +131,14 @@
     </script>
 </head>
 <body>
+
+<div class="navbar">
+    <a href="<%= request.getContextPath() %>/createQuiz.jsp">Create Quiz</a>
+    <a href="<%= request.getContextPath() %>/myQuizzes.jsp">My Quizzes</a>
+    <a href="<%= request.getContextPath() %>/search_bar.html">Search Users</a>
+    <a href="<%= request.getContextPath() %>/inbox.html">Inbox</a>
+    <a href="<%= request.getContextPath() %>/friends.html">Friends</a>
+</div>
 
 <div class="header">VoidQuiz</div>
 
