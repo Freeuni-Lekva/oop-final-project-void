@@ -20,5 +20,9 @@ public class Choice implements Serializable {
     private Integer questionId;
     private String choiceText;
     private Boolean isCorrect;
+
+    public Choice() {
+
+    }
 }
 
