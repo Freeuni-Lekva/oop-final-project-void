@@ -158,7 +158,12 @@ public class QuizRepository extends AbstractRepository<Quiz> {
     }
 
     public int getTakenQuizCount(String username) throws SQLException {
-        String query = "SELECT COUNT(*) AS taken_count FROM quiz_attempts WHERE username = ?";
+        String query = """
+        SELECT COUNT(*) AS taken_count
+        FROM quiz_attempts qa
+        JOIN users u ON qa.user_id = u.user_id
+        WHERE u.username = ?""";
+
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
@@ -169,4 +174,6 @@ public class QuizRepository extends AbstractRepository<Quiz> {
         }
         return 0;
     }
+
+
 } 

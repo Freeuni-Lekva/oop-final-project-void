@@ -269,7 +269,7 @@
                     profileBtn.className = "view-profile";
                     profileBtn.onclick = (e) => {
                         e.stopPropagation();
-                        window.location.href = `/profile.jsp?user=${encodeURIComponent(username)}`;
+                        window.location.href = `/userprofile?user=${encodeURIComponent(username)}`;
                     };
 
                     div.appendChild(nameSpan);

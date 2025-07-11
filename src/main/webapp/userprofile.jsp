@@ -5,7 +5,10 @@
 
 <%
   HttpSession ses = request.getSession(false);
-  String username = (ses != null) ? (String) ses.getAttribute("username") : null;
+  String username = (String) request.getAttribute("searchedUser");
+  if (username == null) {
+    username = (String) session.getAttribute("username");
+  }
 
   if (username == null) {
     response.sendRedirect("login.jsp");
@@ -14,11 +17,11 @@
 
   boolean isAdmin = false;
   String joinDate = "Unknown";
-  int quizTakenCount = 0;
+  Integer quizTakenCount = (Integer) request.getAttribute("quizTakenCount");
+  String name = (String) request.getAttribute("searchedUser");
 
   try {
     Connection conn = DatabaseConnection.getDataSource().getConnection();
-    String name = request.getAttribute("searchedUser").toString();
     PreparedStatement stmt = conn.prepareStatement("SELECT user_id, is_admin, created_at FROM users WHERE username = ?");
     stmt.setString(1, name);
     ResultSet rs = stmt.executeQuery();
@@ -30,18 +33,6 @@
     }
     rs.close();
     stmt.close();
-
-    if (userId != -1) {
-      PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(*) AS taken_count FROM quiz_attempts WHERE user_id = ?");
-      countStmt.setLong(1, userId);
-      ResultSet countRs = countStmt.executeQuery();
-      if (countRs.next()) {
-        quizTakenCount = countRs.getInt("taken_count");
-      }
-      countRs.close();
-      countStmt.close();
-    }
-
     conn.close();
   } catch (Exception e) {
     e.printStackTrace();
@@ -141,7 +132,7 @@
 
 <div class="card">
   <h2>Profile</h2>
-  <div class="profile-item"><span>Username:</span> <%= username %></div>
+  <div class="profile-item"><span>Username:</span> <%= name %></div>
   <div class="profile-item"><span>Admin:</span> <%= isAdmin ? "Yes" : "No" %></div>
   <div class="profile-item"><span>Quizzes Taken:</span> <%= quizTakenCount %></div>
   <div class="profile-item"><span>Join Date:</span> <%= joinDate %></div>
