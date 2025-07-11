@@ -35,15 +35,15 @@ public class ChoiceService {
         for(int i : questionIds) {
             List<Choice> choices = choiceRepository.getAllChoicesByQuestionId(i);
             Choice correctChoice = choices.stream()
-                    .filter(Choice::getIs_correct)
+                    .filter(Choice::getIsCorrect)
                     .findFirst()
                     .orElse(null); // or throw exception if not found
             if(correctChoice == null) continue;
-            correctChoices.add( Choice.builder().choice_id(correctChoice.getChoice_id())
-                            .choice_text(correctChoice.getChoice_text())
-                            .is_correct(correctChoice.getIs_correct())
-                            .question_id(correctChoice.getQuestion_id())
-                            .choice_id(correctChoice.getChoice_id()).build());
+            correctChoices.add( Choice.builder().choiceId(correctChoice.getChoiceId())
+                            .choiceText(correctChoice.getChoiceText())
+                            .isCorrect(correctChoice.getIsCorrect())
+                            .questionId(correctChoice.getQuestionId())
+                            .choiceId(correctChoice.getChoiceId()).build());
 
         }
         return correctChoices;

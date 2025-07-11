@@ -1,10 +1,10 @@
-package QuizFlow.servlets;
+package quiz.quizSummary;
 
-import entities.Quiz;
-import entities.QuizAttempt;
 import org.apache.commons.dbcp2.BasicDataSource;
-import repository.QuizAttemptRepository;
-import repository.QuizRepository;
+import quiz.Quiz;
+import quiz.QuizRepository;
+import quizAttempt.QuizAttempt;
+import quizAttempt.QuizAttemptRepository;
 import repository.UserRepository;
 import resources.DatabaseConnection;
 
@@ -58,20 +58,20 @@ public class QuizSummaryServlet extends HttpServlet {
     }
 
     private void getQuizSummary(HttpServletRequest request, Quiz quiz) {
-        Long creatorId = (long) quiz.getCreator_id();
+        Long creatorId = (long) quiz.getCreatorId();
         String creatorName = getCreatorName(creatorId);
 
         HttpSession session = request.getSession(false);
         Long userId = getUserIdFromSession(session);
         String sort = getSortParameter(request);
 
-        List<QuizAttempt> userAttempts = getUserAttempts(userId, quiz.getQuiz_id(), sort);
-        List<QuizAttempt> topAllTime = getTopAllTimePerformers(quiz.getQuiz_id());
-        List<QuizAttempt> topRecent = getTopRecentPerformers(quiz.getQuiz_id());
-        List<QuizAttempt> recentAttempts = getRecentAttempts(quiz.getQuiz_id());
+        List<QuizAttempt> userAttempts = getUserAttempts(userId, quiz.getQuizId(), sort);
+        List<QuizAttempt> topAllTime = getTopAllTimePerformers(quiz.getQuizId());
+        List<QuizAttempt> topRecent = getTopRecentPerformers(quiz.getQuizId());
+        List<QuizAttempt> recentAttempts = getRecentAttempts(quiz.getQuizId());
 
         Map<Long, String> userIdToUsername = buildUsernameMap(topAllTime, topRecent, recentAttempts, creatorId);
-        Map<String, Object> stats = quizAttemptRepository.getQuizStats(quiz.getQuiz_id());
+        Map<String, Object> stats = quizAttemptRepository.getQuizStats(quiz.getQuizId());
         //System.out.println(stats);
         boolean isOwner = checkIsOwner(userId, creatorId);
 
@@ -107,13 +107,13 @@ public class QuizSummaryServlet extends HttpServlet {
                                                List<QuizAttempt> recentAttempts, Long creatorId) {
         Set<Long> userIds = new HashSet<>();
         for (QuizAttempt a : topAllTime) {
-            userIds.add(Long.valueOf(a.getUser_id()));
+            userIds.add(Long.valueOf(a.getUserId()));
         }
         for (QuizAttempt a : topRecent){
-            userIds.add(Long.valueOf(a.getUser_id()));
+            userIds.add(Long.valueOf(a.getUserId()));
         }
         for (QuizAttempt a : recentAttempts){
-            userIds.add(Long.valueOf(a.getUser_id()));
+            userIds.add(Long.valueOf(a.getUserId()));
         }
         userIds.add(creatorId);
 

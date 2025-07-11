@@ -1,8 +1,10 @@
-package service;
+package question;
 
-import entities.*;
-import repository.*;
-
+import choice.Choice;
+import choice.ChoiceRepository;
+import questionAnswer.QuestionAnswer;
+import questionAnswer.QuestionAnswerRepository;
+import questionBundle.QuestionBundle;
 import java.util.List;
 
 public class QuestionService {
@@ -21,19 +23,19 @@ public class QuestionService {
 
     public void createQuestionWithAnswersAndChoices(QuestionBundle bundle, int quizId) {
         Question question = bundle.getQuestion();
-        question.setQuiz_id(quizId);
+        question.setQuizId(quizId);
         questionRepo.create(question);
 
-        int questionId = question.getQuestion_id();
+        int questionId = question.getQuestionId();
 
         QuestionAnswer answer = bundle.getAnswer();
         if (answer != null) {
-            answer.setQuestion_id(questionId);
+            answer.setQuestionId(questionId);
             answerRepo.create(answer);
         }
 
         for (Choice choice : bundle.getChoices()) {
-            choice.setQuestion_id(questionId);
+            choice.setQuestionId(questionId);
             choiceRepo.create(choice);
         }
     }
@@ -42,19 +44,19 @@ public class QuestionService {
         Question question = bundle.getQuestion();
         questionRepo.update(question);
 
-        int questionId = question.getQuestion_id();
+        int questionId = question.getQuestionId();
 
         answerRepo.deleteById(questionId);
         choiceRepo.deleteById(questionId);
 
         QuestionAnswer answer = bundle.getAnswer();
         if (answer != null) {
-            answer.setQuestion_id(questionId);
+            answer.setQuestionId(questionId);
             answerRepo.create(answer);
         }
 
         for (Choice choice : bundle.getChoices()) {
-            choice.setQuestion_id(questionId);
+            choice.setQuestionId(questionId);
             choiceRepo.create(choice);
         }
     }
@@ -73,4 +75,6 @@ public class QuestionService {
         choiceRepo.deleteById(questionId);
         questionRepo.deleteById(questionId);
     }
+
+
 }

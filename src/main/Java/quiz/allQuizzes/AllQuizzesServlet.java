@@ -1,8 +1,8 @@
-package QuizFlow.servlets;
+package quiz.allQuizzes;
 
-import entities.Quiz;
 import org.apache.commons.dbcp2.BasicDataSource;
-import repository.QuizRepository;
+import quiz.Quiz;
+import quiz.QuizRepository;
 import repository.UserRepository;
 import resources.DatabaseConnection;
 
@@ -32,7 +32,7 @@ public class AllQuizzesServlet extends HttpServlet {
             Map<Long, String> userIdToUsername = new HashMap<>();
 
             for (Quiz quiz : quizzes) {
-                Long creatorId = (long) quiz.getCreator_id();
+                Long creatorId = (long) quiz.getCreatorId();
                 if (!userIdToUsername.containsKey(creatorId)) {
                     String username = userRepository.getUsernameById(creatorId);
                     if (username != null) {

@@ -1,6 +1,6 @@
 package repository;
 
-import entities.User;
+import user.User;
 import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.*;
 import java.util.ArrayList;

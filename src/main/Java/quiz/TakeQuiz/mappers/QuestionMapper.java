@@ -15,7 +15,7 @@ public class QuestionMapper {
                 .type(question.getType())
                 .image_url(question.getImageUrl())
                 .choices(allChoices.stream()
-                        .filter(c -> c.getQuestion_id() == question.getQuestionId())
+                        .filter(c -> c.getQuestionId() == question.getQuestionId())
                         .map(ChoiceMapper::toDto)
                         .collect(Collectors.toList()))
                 .build();

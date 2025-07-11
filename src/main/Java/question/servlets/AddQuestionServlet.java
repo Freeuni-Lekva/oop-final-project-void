@@ -1,4 +1,4 @@
-package servlets;
+package question.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,7 +7,10 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.*;
 
-import entities.*;
+import choice.Choice;
+import question.Question;
+import questionAnswer.QuestionAnswer;
+import questionBundle.QuestionBundle;
 
 @WebServlet("/addQuestion")
 public class AddQuestionServlet extends HttpServlet {
@@ -71,7 +74,7 @@ public class AddQuestionServlet extends HttpServlet {
                 questionText = request.getParameter("qr-question");
                 answerText = request.getParameter("qr-answer");
                 if (answerText != null && !answerText.trim().isEmpty()) {
-                    answer = new QuestionAnswer(null, null, answerText.trim(), 1);
+                    answer = new QuestionAnswer(null, null, answerText.trim());
                 }
                 break;
 
@@ -79,7 +82,7 @@ public class AddQuestionServlet extends HttpServlet {
                 questionText = request.getParameter("fb-question");
                 answerText = request.getParameter("fb-answer");
                 if (answerText != null && !answerText.trim().isEmpty()) {
-                    answer = new QuestionAnswer(null, null, answerText.trim(), 1);
+                    answer = new QuestionAnswer(null, null, answerText.trim());
                 }
                 break;
 
@@ -93,12 +96,12 @@ public class AddQuestionServlet extends HttpServlet {
                 imageUrl = request.getParameter("pr-imageUrl");
                 answerText = request.getParameter("pr-answer");
                 if (answerText != null && !answerText.trim().isEmpty()) {
-                    answer = new QuestionAnswer(null, null, answerText.trim(), 1);
+                    answer = new QuestionAnswer(null, null, answerText.trim());
                 }
                 break;
         }
 
-        Question question = new Question(null, questionText, null, questionType, imageUrl, questionOrder);
+        Question question = new Question(null, null, questionText, questionType, imageUrl, questionOrder);
         return new QuestionBundle(question, answer, choices);
     }
 
@@ -123,23 +126,20 @@ public class AddQuestionServlet extends HttpServlet {
 
     private boolean isValid(QuestionBundle bundle) {
         Question q = bundle.getQuestion();
-        if (q.getQuestion_text() == null || q.getQuestion_text().trim().isEmpty())
+        if (q.getQuestionText() == null || q.getQuestionText().trim().isEmpty())
             return false;
 
-        switch (q.getType()) {
-            case "question_response":
-            case "fill_blank":
-            case "picture_response":
+        return switch (q.getType()) {
+            case "question_response", "fill_blank", "picture_response" -> {
                 QuestionAnswer answer = bundle.getAnswer();
-                return answer != null && !answer.getAnswer_text().trim().isEmpty();
-
-            case "multiple_choice":
-                boolean hasCorrect = bundle.getChoices().stream().anyMatch(Choice::getIs_correct);
-                return bundle.getChoices().size() >= 2 && hasCorrect;
-
-            default:
-                return false;
-        }
+                yield answer != null && !answer.getAnswerText().trim().isEmpty();
+            }
+            case "multiple_choice" -> {
+                boolean hasCorrect = bundle.getChoices().stream().anyMatch(Choice::getIsCorrect);
+                yield bundle.getChoices().size() >= 2 && hasCorrect;
+            }
+            default -> false;
+        };
     }
 
 }

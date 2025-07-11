@@ -1,4 +1,4 @@
-package QuizFlow.servlets;
+package quiz.editQuiz;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

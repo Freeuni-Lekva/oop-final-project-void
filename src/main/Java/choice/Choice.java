@@ -1,15 +1,24 @@
 package choice;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 @Builder
 @Getter
-public class Choice {
-    private Integer choice_id;
-    private Integer question_id;
-    private String choice_text;
-    private Boolean is_correct;
+@Setter
+@AllArgsConstructor
+public class Choice implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private Integer choiceId;
+    private Integer questionId;
+    private String choiceText;
+    private Boolean isCorrect;
 }
 

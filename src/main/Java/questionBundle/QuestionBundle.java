@@ -1,11 +1,22 @@
-package entities;
+package questionBundle;
+import choice.Choice;
+import lombok.Getter;
+import lombok.Setter;
+import question.Question;
+import questionAnswer.QuestionAnswer;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+@Getter
 public class QuestionBundle implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
+    @Setter
     private Question question;
     private QuestionAnswer answer;
+    @Setter
     private List<Choice> choices;
 
     public QuestionBundle(Question question, QuestionAnswer answer, List<Choice> choices) {
@@ -14,27 +25,8 @@ public class QuestionBundle implements Serializable {
         this.choices = choices;
     }
 
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public QuestionAnswer getAnswer() {
-        return answer;
-    }
-
     public void setAnswers(QuestionAnswer answer) {
         this.answer = answer;
     }
 
-    public List<Choice> getChoices() {
-        return choices;
-    }
-
-    public void setChoices(List<Choice> choices) {
-        this.choices = choices;
-    }
-} 
+}

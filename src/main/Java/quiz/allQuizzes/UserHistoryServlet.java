@@ -1,14 +1,13 @@
-package QuizFlow.servlets;
+package quiz.allQuizzes;
 
-import entities.Quiz;
-import entities.QuizAttempt;
 import loginflow.UsersRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
-import repository.QuizRepository;
-import repository.QuizAttemptRepository;
+import quiz.Quiz;
+import quiz.QuizRepository;
+import quizAttempt.QuizAttempt;
+import quizAttempt.QuizAttemptRepository;
 import repository.UserRepository;
 import resources.DatabaseConnection;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,8 +47,8 @@ public class UserHistoryServlet extends HttpServlet {
             Map<Long, String> userIdToUsername = new HashMap<>();
             
             for (QuizAttempt attempt : userAttempts) {
-                Long quizId = Long.valueOf(attempt.getQuiz_id());
-                Long creatorId = Long.valueOf(attempt.getUser_id());
+                Long quizId = Long.valueOf(attempt.getQuizId());
+                Long creatorId = Long.valueOf(attempt.getUserId());
 
                 if (!quizDetails.containsKey(quizId)) {
                     Quiz quiz = quizRepository.getById(quizId);

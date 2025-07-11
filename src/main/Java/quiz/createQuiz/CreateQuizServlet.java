@@ -1,7 +1,10 @@
-package servlets;
+package quiz.createQuiz;
 
-import entities.Question;
-import entities.Quiz;
+import loginflow.UsersRepository;
+import question.Question;
+import quiz.Quiz;
+import resources.DatabaseConnection;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,11 +19,11 @@ public class CreateQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
-        Long userIdLong = (Long) request.getSession().getAttribute("userId");
-        int creatorId = userIdLong.intValue();
+        String username = (String) request.getSession().getAttribute("username");
+        int creatorId = new UsersRepository(DatabaseConnection.getDataSource()).findByName(username).getUser_id();
 
 
-        Quiz quiz = new Quiz(null, title, description, creatorId, false, false, false, false, new Timestamp(System.currentTimeMillis()));
+        Quiz quiz = new Quiz(null, title, description, creatorId, new Timestamp(System.currentTimeMillis()));
         request.getSession().setAttribute("quizEntity", quiz);
 
         //randomizing the quiz id for session tracking only
@@ -33,9 +36,9 @@ public class CreateQuizServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getSession().getAttribute("userId") == null) {
-            request.getSession().setAttribute("userId", 1L); //simulates for now
-        }
+//        if (request.getSession().getAttribute("userId") == null) {
+//            request.getSession().setAttribute("userId", 1L); //simulates for now
+//        }
         request.getRequestDispatcher("/createQuiz.jsp").forward(request, response);
     }
 }

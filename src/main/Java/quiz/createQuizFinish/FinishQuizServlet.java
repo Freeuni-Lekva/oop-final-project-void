@@ -1,11 +1,9 @@
-package servlets;
+package quiz.createQuizFinish;
 
-import entities.*;
-import repository.*;
+import questionBundle.QuestionBundle;
+import quiz.Quiz;
+import quiz.QuizService;
 import org.apache.commons.dbcp2.BasicDataSource;
-import service.QuestionService;
-import service.QuizService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -27,10 +25,7 @@ public class FinishQuizServlet extends HttpServlet {
 
         try {
             BasicDataSource ds = resources.DatabaseConnection.getDataSource();
-            QuizService quizService = new QuizService(
-                    new QuizRepository(ds),
-                    new QuestionService(new QuestionRepository(ds), new QuestionAnswerRepository(ds), new ChoiceRepository(ds))
-            );
+            QuizService quizService = new QuizService(ds);
 
             quizService.createQuizWithQuestions(quiz, questionBundles);
             request.getSession().removeAttribute("quizEntity");

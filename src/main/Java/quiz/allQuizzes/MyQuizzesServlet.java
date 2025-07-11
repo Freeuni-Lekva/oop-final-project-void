@@ -1,9 +1,9 @@
-package QuizFlow.servlets;
+package quiz.allQuizzes;
 
-import entities.Quiz;
 import loginflow.UsersRepository;
 import org.apache.commons.dbcp2.BasicDataSource;
-import repository.QuizRepository;
+import quiz.Quiz;
+import quiz.QuizRepository;
 import resources.DatabaseConnection;
 
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +23,7 @@ public class MyQuizzesServlet extends HttpServlet {
 
     @Override
     public void init() {
-        System.out.println("AQ MOVEDITTTTTTTTTTTTTTTT");
+        //System.out.println("AQ MOVEDITTTTTTTTTTTTTTTT");
         BasicDataSource dataSource = DatabaseConnection.getDataSource();
         quizRepository = new QuizRepository(dataSource);
         //userRepository = new UserRepository(dataSource);
@@ -31,7 +31,7 @@ public class MyQuizzesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("AQ MOVEDITTTTTTTTTTTTTTTT");
+        //System.out.println("AQ MOVEDITTTTTTTTTTTTTTTT");
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("username") == null) {
             response.sendRedirect("login.jsp");

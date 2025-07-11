@@ -58,7 +58,7 @@
 <div class="container">
     <h2>Quiz Successfully Created!</h2>
     <p>Your quiz has been saved. You can now return to the homepage or create another quiz.</p>
-    <form action="createQuiz" method="get">
+    <form action="welcome.jsp" method="get">
         <input type="submit" value="Go to Homepage" class="btn">
     </form>
 </div>
