@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="entities.Quiz" %>
-<%@ page import="entities.QuizAttempt" %>
+<%@ page import="quiz.Quiz" %>
+<%@ page import="quizAttempt.QuizAttempt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -156,18 +156,18 @@
     <div class="section-card">
         <h2><%= quiz.getTitle() %></h2>
         <div class="quiz-meta">
-            By <a class="creator-link" href="UserProfileServlet?userId=<%= quiz.getCreator_id() %>"><%= creatorName %></a>
-            | Created: <%= quiz.getCreated_at() != null ? quiz.getCreated_at().toString().substring(0, 16).replace('T', ' ') : "Unknown" %>
+            By <a class="creator-link" href="UserProfileServlet?userId=<%= quiz.getCreatorId() %>"><%= creatorName %></a>
+            | Created: <%= quiz.getCreatedAt() != null ? quiz.getCreatedAt().toString().substring(0, 16).replace('T', ' ') : "Unknown" %>
         </div>
         <div class="info-card desc"><%= quiz.getDescription() %></div>
         <div class="actions">
-            <form action="TakeQuizServlet" method="get" style="margin:0;">
-                <input type="hidden" name="quizId" value="<%= quiz.getQuiz_id() %>" />
+            <form action="quiz/start" method="get" style="margin:0;">
+                <input type="hidden" name="id" value="<%= quiz.getQuizId() %>" />
                 <button class="action-btn" type="submit">Take Quiz</button>
             </form>
             <% if (isOwner) { %>
             <form action="EditQuizServlet" method="get" style="margin:0;">
-                <input type="hidden" name="quizId" value="<%= quiz.getQuiz_id() %>" />
+                <input type="hidden" name="quizId" value="<%= quiz.getQuizId() %>" />
                 <button class="action-btn" type="submit">Edit Quiz</button>
             </form>
             <% } %>
@@ -180,9 +180,9 @@
         <div class="info-card">
             <div class="sort-links">
                 Sort by:
-                <a class="sort-link <%= "date".equals(sort) ? "selected" : "" %>" href="QuizSummaryServlet?quizId=<%= quiz.getQuiz_id() %>&sort=date">Date</a>
-                <a class="sort-link <%= "percent".equals(sort) ? "selected" : "" %>" href="QuizSummaryServlet?quizId=<%= quiz.getQuiz_id() %>&sort=percent">Percent Correct</a>
-                <a class="sort-link <%= "time".equals(sort) ? "selected" : "" %>" href="QuizSummaryServlet?quizId=<%= quiz.getQuiz_id() %>&sort=time">Time Taken</a>
+                <a class="sort-link <%= "date".equals(sort) ? "selected" : "" %>" href="QuizSummaryServlet?quizId=<%= quiz.getQuizId() %>&sort=date">Date</a>
+                <a class="sort-link <%= "percent".equals(sort) ? "selected" : "" %>" href="QuizSummaryServlet?quizId=<%= quiz.getQuizId() %>&sort=percent">Percent Correct</a>
+                <a class="sort-link <%= "time".equals(sort) ? "selected" : "" %>" href="QuizSummaryServlet?quizId=<%= quiz.getQuizId() %>&sort=time">Time Taken</a>
             </div>
             <%
                 List<QuizAttempt> userAttempts = (List<QuizAttempt>) request.getAttribute("userAttempts");
@@ -203,10 +203,10 @@
                     for (QuizAttempt attempt : userAttempts) {
                 %>
                 <tr>
-                    <td><%= attempt.getAttempted_at() != null ? attempt.getAttempted_at().toString().substring(0, 16).replace('T', ' ') : "" %></td>
+                    <td><%= attempt.getAttemptedAt() != null ? attempt.getAttemptedAt().toString().substring(0, 16).replace('T', ' ') : "" %></td>
                     <td><%= attempt.getScore() %></td>
-                    <td><%= attempt.getTotal_questions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotal_questions()) : "-" %>%</td>
-                    <td><%= attempt.getTime_taken() %></td>
+                    <td><%= attempt.getTotalQuestions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotalQuestions()) : "-" %>%</td>
+                    <td><%= attempt.getTimeTaken() %></td>
                 </tr>
                 <%
                     }
@@ -240,15 +240,15 @@
             </tr>
             <%
                 for (QuizAttempt attempt : topAllTime) {
-                    Long uid = Long.valueOf(attempt.getUser_id());
+                    Long uid = Long.valueOf(attempt.getUserId());
                     String uname = (userIdToUsername != null && userIdToUsername.get(uid) != null) ? userIdToUsername.get(uid) : "Unknown";
             %>
             <tr>
                 <td><a class="creator-link" href="UserProfileServlet?userId=<%= uid %>"><%= uname %></a></td>
                 <td><%= attempt.getScore() %></td>
-                <td><%= attempt.getTotal_questions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotal_questions()) : "-" %>%</td>
-                <td><%= attempt.getTime_taken() %></td>
-                <td><%= attempt.getAttempted_at() != null ? attempt.getAttempted_at().toString().substring(0, 16).replace('T', ' ') : "" %></td>
+                <td><%= attempt.getTotalQuestions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotalQuestions()) : "-" %>%</td>
+                <td><%= attempt.getTimeTaken() %></td>
+                <td><%= attempt.getAttemptedAt() != null ? attempt.getAttemptedAt().toString().substring(0, 16).replace('T', ' ') : "" %></td>
             </tr>
             <%
                 }
@@ -281,15 +281,15 @@
             </tr>
             <%
                 for (QuizAttempt attempt : topRecent) {
-                    Long uid = Long.valueOf(attempt.getUser_id());
+                    Long uid = Long.valueOf(attempt.getUserId());
                     String uname = (userIdToUsername != null && userIdToUsername.get(uid) != null) ? userIdToUsername.get(uid) : "Unknown";
             %>
             <tr>
                 <td><a class="creator-link" href="UserProfileServlet?userId=<%= uid %>"><%= uname %></a></td>
                 <td><%= attempt.getScore() %></td>
-                <td><%= attempt.getTotal_questions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotal_questions()) : "-" %>%</td>
-                <td><%= attempt.getTime_taken() %></td>
-                <td><%= attempt.getAttempted_at() != null ? attempt.getAttempted_at().toString().substring(0, 16).replace('T', ' ') : "" %></td>
+                <td><%= attempt.getTotalQuestions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotalQuestions()) : "-" %>%</td>
+                <td><%= attempt.getTimeTaken() %></td>
+                <td><%= attempt.getAttemptedAt() != null ? attempt.getAttemptedAt().toString().substring(0, 16).replace('T', ' ') : "" %></td>
             </tr>
             <%
                 }
@@ -322,15 +322,15 @@
             </tr>
             <%
                 for (QuizAttempt attempt : recentAttempts) {
-                    Long uid = Long.valueOf(attempt.getUser_id());
+                    Long uid = Long.valueOf(attempt.getUserId());
                     String uname = (userIdToUsername != null && userIdToUsername.get(uid) != null) ? userIdToUsername.get(uid) : "Unknown";
             %>
             <tr>
                 <td><a class="creator-link" href="UserProfileServlet?userId=<%= uid %>"><%= uname %></a></td>
                 <td><%= attempt.getScore() %></td>
-                <td><%= attempt.getTotal_questions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotal_questions()) : "-" %>%</td>
-                <td><%= attempt.getTime_taken() %></td>
-                <td><%= attempt.getAttempted_at() != null ? attempt.getAttempted_at().toString().substring(0, 16).replace('T', ' ') : "" %></td>
+                <td><%= attempt.getTotalQuestions() > 0 ? String.format("%.1f", 100.0 * attempt.getScore() / attempt.getTotalQuestions()) : "-" %>%</td>
+                <td><%= attempt.getTimeTaken() %></td>
+                <td><%= attempt.getAttemptedAt() != null ? attempt.getAttemptedAt().toString().substring(0, 16).replace('T', ' ') : "" %></td>
             </tr>
             <%
                 }

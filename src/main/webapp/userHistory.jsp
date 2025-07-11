@@ -1,7 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="entities.Quiz" %>
-<%@ page import="entities.QuizAttempt" %>
+<%@ page import="quiz.Quiz" %>
+<%@ page import="quizAttempt.QuizAttempt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
