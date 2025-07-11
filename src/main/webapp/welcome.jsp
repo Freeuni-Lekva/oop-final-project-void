@@ -134,7 +134,7 @@
 
 <div class="navbar">
     <a href="<%= request.getContextPath() %>/createQuiz.jsp">Create Quiz</a>
-    <a href="<%= request.getContextPath() %>/myQuizzes.jsp">My Quizzes</a>
+    <a href="<%= request.getContextPath() %>/myQuizzes">My Quizzes</a>
     <a href="<%= request.getContextPath() %>/search_bar.html">Search Users</a>
     <a href="<%= request.getContextPath() %>/inbox.html">Inbox</a>
     <a href="<%= request.getContextPath() %>/friends.html">Friends</a>

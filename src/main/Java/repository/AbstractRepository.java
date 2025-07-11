@@ -16,4 +16,5 @@ public abstract class AbstractRepository<Entity> implements GenericRepository<En
         return dataSource.getConnection();
     }
 
+
 }

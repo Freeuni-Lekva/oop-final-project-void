@@ -1,7 +1,6 @@
 package quiz.submitQuiz;
 
 import choice.Choice;
-import choice.ChoiceRepository;
 import choice.ChoiceService;
 import questionAnswer.QuestionAnswer;
 import questionAnswer.QuestionAnswerService;
@@ -30,14 +29,15 @@ public class QuizEvaluationService {
         List<QuestionAnswer> correctAnswers = qaService.getCorrectAnswersByQuestionIds(questionIds);
 
         Map<Integer, String> correctMap = new HashMap<>();
-        for(var q : correctAnswers) {
+        for (var q : correctAnswers) {
             correctMap.put(q.getQuestionId(), q.getAnswerText());
         }
 
         long correctCount = userAnswers.stream()
                 .filter(userAnswer -> {
                     String correct = correctMap.get(userAnswer.questionId);
-                    return correct != null && userAnswer.answerText != null && correct.equalsIgnoreCase(userAnswer.answerText.trim());
+                    return correct != null && userAnswer.answerText != null
+                            && correct.equalsIgnoreCase(userAnswer.answerText.trim());
                 })
                 .count();
 
@@ -45,16 +45,17 @@ public class QuizEvaluationService {
 
         Map<Integer, String> correctChoiceMap = new HashMap<>();
         for (Choice choice : correctChoices) {
-            correctChoiceMap.put(choice.getQuestion_id(), choice.getChoice_text());
+            correctChoiceMap.put(choice.getQuestionId(), choice.getChoiceText());
         }
 
         long correctChoiceCount = userAnswers.stream()
                 .filter(userAnswer -> {
                     String correct = correctChoiceMap.get(userAnswer.questionId);
-                    return correct != null && userAnswer.answerText != null && correct.equalsIgnoreCase(userAnswer.answerText.trim());
+                    return correct != null && userAnswer.answerText != null
+                            && correct.equalsIgnoreCase(userAnswer.answerText.trim());
                 })
                 .count();
 
-        return (int)correctCount + (int)correctChoiceCount;
+        return (int) correctCount + (int) correctChoiceCount;
     }
 }
