@@ -41,7 +41,7 @@ public class MyQuizzesServlet extends HttpServlet {
             String username = (String) request.getSession().getAttribute("username");
             int userId = new UsersRepository(DatabaseConnection.getDataSource()).findByName(username).getUser_id();
             List<Quiz> quizzes = quizRepository.getQuizzesByCreatorId(userId);
-            System.out.println("Amdeni qvizia:: " + quizzes.size());
+            //System.out.println("Amdeni qvizia:: " + quizzes.size());
             Map<Long, String> userIdToUsername = new HashMap<>();
             //String username = userRepository.getUsernameById(userId);
             userIdToUsername.put((long) userId, username);
@@ -49,7 +49,11 @@ public class MyQuizzesServlet extends HttpServlet {
             request.setAttribute("userIdToUsername", userIdToUsername);
             request.getRequestDispatcher("/myQuizzes.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.err.println("Exception occurred while loading user quizzes:");
+            System.err.println("Exception type: " + e.getClass().getName());
+            System.err.println("Message: " + e.getMessage());
+            e.printStackTrace();  // prints full stack trace
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error loading your quizzes.");
         }
     }

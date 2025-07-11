@@ -1,6 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="entities.Quiz" %>
+<%@ page import="quiz.Quiz" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -126,18 +126,18 @@
         <div class="quiz-list">
         <%
             for (Quiz quiz : quizzes) {
-                Long creatorId = Long.valueOf(quiz.getCreator_id());
+                Long creatorId = Long.valueOf(quiz.getCreatorId());
                 String creatorName = userIdToUsername != null ? userIdToUsername.get(creatorId) : (creatorId != null ? ("User " + creatorId) : "Unknown");
         %>
             <div class="quiz-card">
-                <a class="quiz-title" href="QuizSummaryServlet?quizId=<%= quiz.getQuiz_id() %>"><%= quiz.getTitle() %></a>
+                <a class="quiz-title" href="QuizSummaryServlet?quizId=<%= quiz.getQuizId() %>"><%= quiz.getTitle() %></a>
                 <div class="quiz-desc"><%= quiz.getDescription() %></div>
                 <div class="quiz-meta">
                     By <a class="creator-link" href="UserProfileServlet?userId=<%= creatorId %>"><%= creatorName %></a><br>
-                    Created: <%= quiz.getCreated_at() != null ? quiz.getCreated_at().toString().substring(0, 16).replace('T', ' ') : "Unknown" %>
+                    Created: <%= quiz.getCreatedAt() != null ? quiz.getCreatedAt().toString().substring(0, 16).replace('T', ' ') : "Unknown" %>
                 </div>
-                <form action="TakeQuizServlet" method="get" style="margin:0;">
-                    <input type="hidden" name="quizId" value="<%= quiz.getQuiz_id() %>" />
+                <form action="quiz/start" method="get" style="margin:0;">
+                    <input type="hidden" name="id" value="<%= quiz.getQuizId() %>" />
                     <button class="take-quiz-btn" type="submit">Take Quiz</button>
                 </form>
             </div>
