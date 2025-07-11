@@ -32,11 +32,13 @@ public class FriendsServelet extends HttpServlet {
         Integer currentUserId = usersService.findByName(currentUsersName).getUser_id();
 
         String pathInfo = req.getPathInfo();
+        System.out.println(pathInfo);
         if ("/lookup".equals(pathInfo)) {
             String search = req.getParameter("search");
             List<Users> users = usersService.lookUpPeople(search);
+            users = users.stream().filter(u -> !u.getUser_id().equals(currentUserId)).toList();
             List<UserDto> names = users.stream().map(user -> new UserDto(user.getUsername())).collect(Collectors.toList());
-            returnListAsJson(users, resp);
+            returnListAsJson(names, resp);
         } else if ("/info".equals(pathInfo)) {
             String friendName = req.getParameter("friend_name");
             if (friendName == null || friendName.isEmpty()) {
@@ -45,11 +47,13 @@ public class FriendsServelet extends HttpServlet {
             }
 
             Integer friendsUserId = usersService.findByName(friendName).getUser_id();
+            System.out.println(friendsUserId);
             if (friendsUserId == null) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid friend_name parameter");
             }
 
             FriendshipDto status = friendsService.getUserFriendRequest(currentUserId, friendsUserId);
+            System.out.println(status);
             returnListAsJson(status, resp);
         } else if ("/requests".equals(pathInfo)) {
 

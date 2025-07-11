@@ -6,7 +6,6 @@
     <title>Friends - VoidQuiz</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap">
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -82,7 +81,7 @@
             background-color: #303f9f;
         }
 
-        .results, .user-details {
+        .results {
             background-color: #161244;
             border-radius: 12px;
             padding: 1.5rem;
@@ -95,9 +94,19 @@
             color: #bdaaff;
         }
 
+        #userList {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
         .user {
-            padding: 0.75rem;
-            border-bottom: 1px solid #2e2e5e;
+            background-color: #1d1a4d;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
             transition: background-color 0.2s;
         }
@@ -106,18 +115,67 @@
             background-color: #2b2566;
         }
 
-        .user:last-child {
-            border-bottom: none;
+        .view-profile {
+            padding: 0.3rem 0.8rem;
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
         }
 
-        .user-details h2 {
+        .view-profile:hover {
+            background-color: #5c6bc0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #1d1a4d;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-content h2 {
             margin-bottom: 1rem;
             color: #f0e6ff;
         }
 
-        .user-details p {
+        .modal-content p {
             font-size: 1.1rem;
             margin-bottom: 1rem;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            color: #aaa;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: white;
         }
 
         .action-btn {
@@ -129,7 +187,7 @@
             border-radius: 6px;
             font-size: 1rem;
             cursor: pointer;
-            margin-right: 1rem;
+            margin: 0.5rem;
         }
 
         .action-btn.unfriend {
@@ -144,7 +202,7 @@
 <body>
 
 <script>
-    fetch('/QuizWebsite_war_exploded/session-check')
+    fetch('/session-check')
         .then(res => {
             if (!res.ok) {
                 window.location.href = 'login.jsp';
@@ -170,14 +228,18 @@
     <div id="userList"></div>
 </section>
 
-<section class="user-details" id="userDetails" style="display: none">
-    <h2 id="username">Username</h2>
-    <p id="status">Friendship Status</p>
-    <button class="action-btn" id="sendRequest" onclick="sendRequest()">Send Friend Request</button>
-    <button class="action-btn" id="acceptRequest" onclick="acceptRequest()">Accept Request</button>
-    <button class="action-btn" id="cancelRequest" onclick="cancelRequest()">Cancel Request</button>
-    <button class="action-btn unfriend" id="unfriend" onclick="unfriend()">Unfriend</button>
-</section>
+<!-- Modal for User Details -->
+<div class="modal" id="userModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="username">Username</h2>
+        <p id="status">Friendship Status</p>
+        <button class="action-btn" id="sendRequest" onclick="sendRequest()">Send Friend Request</button>
+        <button class="action-btn" id="acceptRequest" onclick="acceptRequest()">Accept Request</button>
+        <button class="action-btn" id="cancelRequest" onclick="cancelRequest()">Cancel Request</button>
+        <button class="action-btn unfriend" id="unfriend" onclick="unfriend()">Unfriend</button>
+    </div>
+</div>
 
 <script>
     let selectedUser = null;
@@ -186,16 +248,33 @@
         event.preventDefault();
         const query = document.getElementById("search").value;
 
-        fetch(`/QuizWebsite_war_exploded/users/friends/lookup?search=${encodeURIComponent(query)}`)
+        fetch(`/users/friends/lookup?search=${encodeURIComponent(query)}`)
             .then(res => res.json())
             .then(users => {
                 const list = document.getElementById("userList");
                 list.innerHTML = "";
+
                 users.forEach(user => {
+                    const username = user.username || user.friend_name;
+                    if (!username) return;
+
                     const div = document.createElement("div");
                     div.className = "user";
-                    div.textContent = user.username;
-                    div.onclick = () => showUserDetails(user);
+                    div.onclick = () => showUserDetails({ username });
+
+                    const nameSpan = document.createElement("span");
+                    nameSpan.textContent = username;
+
+                    const profileBtn = document.createElement("button");
+                    profileBtn.textContent = "View Profile";
+                    profileBtn.className = "view-profile";
+                    profileBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        window.location.href = `/profile.jsp?user=${encodeURIComponent(username)}`;
+                    };
+
+                    div.appendChild(nameSpan);
+                    div.appendChild(profileBtn);
                     list.appendChild(div);
                 });
             });
@@ -214,13 +293,13 @@
 
         usernameElem.textContent = user.username;
         statusElem.textContent = "Loading...";
-        document.getElementById("userDetails").style.display = "block";
+        document.getElementById("userModal").style.display = "flex";
 
         [sendRequestBtn, unfriendBtn, acceptRequestBtn, cancelRequestBtn].forEach(btn => {
             btn.style.display = "none";
         });
 
-        fetch(`/QuizWebsite_war_exploded/users/friends/info?friend_name=${encodeURIComponent(user.username)}`)
+        fetch(`/users/friends/info?friend_name=${encodeURIComponent(user.username)}`)
             .then(res => res.json())
             .then(data => {
                 const status = data?.status || null;
@@ -242,9 +321,12 @@
             });
     }
 
+    function closeModal() {
+        document.getElementById("userModal").style.display = "none";
+    }
 
     function sendRequest() {
-        fetch(`/QuizWebsite_war_exploded/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}`, {
+        fetch(`/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}`, {
             method: "POST"
         }).then(() => {
             alert("Friend request sent!");
@@ -253,7 +335,7 @@
     }
 
     function unfriend() {
-        fetch(`/QuizWebsite_war_exploded/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}`, {
+        fetch(`/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}`, {
             method: "DELETE"
         }).then(() => {
             alert("User unfriended");
@@ -262,7 +344,7 @@
     }
 
     function acceptRequest() {
-        fetch(`/QuizWebsite_war_exploded/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}&state=true`, {
+        fetch(`/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}&state=true`, {
             method: "PUT"
         }).then(() => {
             alert("Friend request accepted");
@@ -271,7 +353,7 @@
     }
 
     function cancelRequest() {
-        fetch(`/QuizWebsite_war_exploded/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}&state=false`, {
+        fetch(`/users/friends?friend_name=${encodeURIComponent(selectedUser.username)}&state=false`, {
             method: "PUT"
         }).then(() => {
             alert("Friend request canceled");
@@ -279,5 +361,6 @@
         });
     }
 </script>
+
 </body>
 </html>
