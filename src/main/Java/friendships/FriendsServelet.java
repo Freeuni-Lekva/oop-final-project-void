@@ -1,12 +1,11 @@
 package friendships;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import friendships.exceptions.UserNotFoundException;
-import loginflow.UserDto;
-import loginflow.Users;
 import friendships.exceptions.FriendRequestNotFoundException;
 import friendships.exceptions.FriendshipNotFoundException;
 import friendships.exceptions.FriendshipRequestAlreadyExistsException;
+import loginflow.UserDto;
+import loginflow.Users;
 import loginflow.UsersService;
 
 import javax.servlet.ServletException;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,9 +37,7 @@ public class FriendsServelet extends HttpServlet {
             List<Users> users = usersService.lookUpPeople(search);
             List<UserDto> names = users.stream().map(user -> new UserDto(user.getUsername())).collect(Collectors.toList());
             returnListAsJson(users, resp);
-        }
-
-        else if("/info".equals(pathInfo)) {
+        } else if ("/info".equals(pathInfo)) {
             String friendName = req.getParameter("friend_name");
             if (friendName == null || friendName.isEmpty()) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing friend_name parameter");
@@ -54,16 +50,12 @@ public class FriendsServelet extends HttpServlet {
             }
 
             FriendshipDto status = friendsService.getUserFriendRequest(currentUserId, friendsUserId);
-            returnListAsJson(status,resp);
-        }
-
-        else if ("/requests".equals(pathInfo)) {
+            returnListAsJson(status, resp);
+        } else if ("/requests".equals(pathInfo)) {
 
             List<FriendshipDto> friendRequests = friendsService.getUserFriendRequests(currentUserId);
             returnListAsJson(friendRequests, resp);
-        }
-
-        else if (pathInfo == null || req.getPathInfo().equals("/")) {
+        } else if (pathInfo == null || req.getPathInfo().equals("/")) {
             List<FriendshipDto> friendsDto = friendsService.getAcceptedFriends(currentUserId);
 
             returnListAsJson(friendsDto, resp);
@@ -110,15 +102,15 @@ public class FriendsServelet extends HttpServlet {
             Users friend = usersService.findByName(friend_name);
             Users currentUser = usersService.findById(currentUserId);
 
-            String state= req.getParameter("state");
+            String state = req.getParameter("state");
 
-            if("true".equals(state)) {
+            if ("true".equals(state)) {
                 try {
                     friendsService.acceptFriendRequest(currentUser, friend);
                 } catch (FriendRequestNotFoundException e) {
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
                 }
-            }else if("false".equals(state)) {
+            } else if ("false".equals(state)) {
                 try {
                     friendsService.rejectFriendRequest(currentUser, friend);
                 } catch (FriendRequestNotFoundException e) {
@@ -174,8 +166,8 @@ public class FriendsServelet extends HttpServlet {
     private boolean checkIfSessionExists(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
         String currentUsersName = (String) req.getSession().getAttribute("username");
-        if (session == null || currentUsersName==null) {
-            resp.sendRedirect(req.getContextPath()+ "/login.jsp");
+        if (session == null || currentUsersName == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
             return false;
         }
         return true;

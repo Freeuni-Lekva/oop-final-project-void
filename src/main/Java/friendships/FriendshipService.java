@@ -1,10 +1,10 @@
 package friendships;
 
-import loginflow.Users;
 import friendships.exceptions.FriendRequestNotAllowedException;
 import friendships.exceptions.FriendRequestNotFoundException;
 import friendships.exceptions.FriendshipRequestAlreadyExistsException;
 import friendships.exceptions.UserNotFoundException;
+import loginflow.Users;
 import loginflow.UsersService;
 import org.apache.commons.lang3.tuple.Pair;
 import temporary.DatabaseConnection;
@@ -62,7 +62,7 @@ public class FriendshipService {
     }
 
     public void sendFriendRequest(Users currentUser, Users friend) throws FriendshipRequestAlreadyExistsException {
-        if(currentUser.getUser_id().equals(friend.getUser_id())) {
+        if (currentUser.getUser_id().equals(friend.getUser_id())) {
             throw new FriendRequestNotAllowedException("You can't send friend requests to yourself");
         }
 
@@ -82,14 +82,14 @@ public class FriendshipService {
     }
 
 
-    public List<FriendshipDto> getUserFriendRequests(Integer currentUserId){
-        if (usersService.findById(currentUserId)==null) throw new UserNotFoundException("Not valid user credentials");
+    public List<FriendshipDto> getUserFriendRequests(Integer currentUserId) {
+        if (usersService.findById(currentUserId) == null) throw new UserNotFoundException("Not valid user credentials");
 
         List<Friendship> usersFriendRequests = friendsRepository.getUsersFriendRequests(currentUserId);
 
         List<Pair<Integer, Timestamp>> friendsPrimaryKeyList = usersFriendRequests.stream()
                 .map(friend -> {
-                   return Pair.of(friend.getRequester_id(), friend.getRequested_at());
+                    return Pair.of(friend.getRequester_id(), friend.getRequested_at());
                 }).collect(Collectors.toList());
 
         List<FriendshipDto> friendsDto = getFriendshipDtosFromUserIds(friendsPrimaryKeyList);
@@ -99,7 +99,7 @@ public class FriendshipService {
     public FriendshipDto getUserFriendRequest(Integer currentUser, Integer friend) {
         Friendship current = friendsRepository.findFriendshipByUsersId(currentUser, friend);
 
-        if(current==null) {
+        if (current == null) {
             return null;
         }
         return FriendshipDto.builder()
@@ -109,7 +109,7 @@ public class FriendshipService {
     }
 
 
-     private List<FriendshipDto> getFriendshipDtosFromUserIds(List<Pair<Integer, Timestamp>> friendsPrimaryKeyList){
+    private List<FriendshipDto> getFriendshipDtosFromUserIds(List<Pair<Integer, Timestamp>> friendsPrimaryKeyList) {
         return friendsPrimaryKeyList.stream()
                 .map(pair -> FriendshipDto.fromUser(usersService.findById(pair.getLeft()), pair.getRight()))
                 .collect(Collectors.toList());

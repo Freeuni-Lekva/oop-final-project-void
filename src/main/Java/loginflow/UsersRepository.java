@@ -4,8 +4,11 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import repository.AbstractRepository;
 import temporary.DatabaseConnection;
 
-import java.sql.*;
-        import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersRepository extends AbstractRepository<Users> {
@@ -37,11 +40,11 @@ public class UsersRepository extends AbstractRepository<Users> {
     }
 
     public void add(String username, String hashedPassword) throws SQLException {
-        try(Connection connection = DatabaseConnection.getDataSource().getConnection()){
-        PreparedStatement preparedStatement = connection.prepareStatement(addUser);
-        preparedStatement.setString(1, username);
-        preparedStatement.setString(2, hashedPassword);
-        preparedStatement.executeUpdate();
+        try (Connection connection = DatabaseConnection.getDataSource().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(addUser);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, hashedPassword);
+            preparedStatement.executeUpdate();
         }
     }
 
